@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rutinku Harian 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink-50:  #fdf0f5;
+    --pink-100: #f9d0e3;
+    --pink-200: #f3a8c8;
+    --pink-300: #ea7dae;
+    --pink-400: #d4537e;
+    --pink-500: #b83c65;
+    --pink-600: #993556;
+    --blue-50:  #eef5fc;
+    --blue-100: #c8def8;
+    --blue-200: #9ec4f2;
+    --blue-300: #6ba8e8;
+    --blue-400: #4389d8;
+    --blue-500: #2d6fc0;
+    --blue-600: #1a55a8;
+    --gray-100: #f5f5f5;
+    --gray-200: #e8e8e8;
+    --gray-400: #a0a0a0;
+    --gray-600: #666;
+    --white: #ffffff;
+    --text: #2d2d2d;
+    --text-muted: #888;
+    --shadow-soft: 0 2px 16px rgba(212,83,126,0.08);
+    --shadow-card: 0 1px 4px rgba(0,0,0,0.06);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-pill: 50px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: linear-gradient(145deg, #fff0f7 0%, #f0f5ff 50%, #fff5fb 100%);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  .app-header {
+    background: white;
+    border-bottom: 1px solid var(--pink-100);
+    padding: 20px 20px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 12px rgba(212,83,126,0.07);
+  }
+  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .app-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--pink-500); }
+  .date-chip {
+    background: var(--pink-50);
+    border: 1px solid var(--pink-100);
+    border-radius: var(--radius-pill);
+    padding: 5px 14px;
+    font-size: 12px;
+    color: var(--pink-400);
+    font-weight: 500;
+  }
+  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+  .progress-meta .prog-pct { font-weight: 600; color: var(--pink-400); }
+  .progress-track {
+    background: var(--pink-50);
+    border-radius: 99px;
+    height: 6px;
+    overflow: hidden;
+    border: 1px solid var(--pink-100);
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--pink-300), var(--blue-300));
+    transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    min-width: 0%;
+  }
+  .motivasi-text { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 18px; }
+
+  .main { max-width: 480px; margin: 0 auto; padding: 16px 16px 120px; }
+
+  .section { margin-bottom: 8px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 4px 8px;
+  }
+  .section-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .section-dot.pink { background: var(--pink-300); }
+  .section-dot.blue { background: var(--blue-300); }
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); }
+  .section-count { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+
+  .task-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 13px 14px;
+    margin-bottom: 7px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    box-shadow: var(--shadow-card);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .task-card:active { transform: scale(0.98); }
+  .task-card:hover { border-color: var(--pink-200); }
+  .task-card.done {
+    background: linear-gradient(135deg, rgba(253,240,245,0.6), rgba(238,245,252,0.6));
+    border-color: var(--blue-100);
+  }
+  .task-card.done .task-name { text-decoration: line-through; color: var(--text-muted); }
+
+  .check-btn {
+    width: 24px; height: 24px; border-radius: 50%;
+    border: 1.5px solid var(--gray-200);
+    background: white;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+    position: relative;
+  }
+  .task-card.done .check-btn {
+    background: linear-gradient(135deg, var(--pink-300), var(--blue-300));
+    border-color: transparent;
+  }
+  .check-btn::after {
+    content: '';
+    width: 5px; height: 9px;
+    border: 2px solid white;
+    border-top: none; border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .task-card.done .check-btn::after { opacity: 1; }
+
+  .task-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .task-icon.pink { background: var(--pink-50); }
+  .task-icon.blue { background: var(--blue-50); }
+
+  .task-body { flex: 1; min-width: 0; }
+  .task-name { font-size: 14px; font-weight: 400; color: var(--text); line-height: 1.3; }
+  .task-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  .notif-panel {
+    background: white;
+    border: 1px solid var(--pink-100);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 8px;
+    box-shadow: var(--shadow-soft);
+  }
+  .notif-panel-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+
+  .notif-schedule { list-style: none; margin-bottom: 14px; }
+  .notif-schedule li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px; color: var(--text-muted);
+  }
+  .notif-schedule li:last-child { border-bottom: none; }
+  .notif-time { font-weight: 600; color: var(--pink-400); min-width: 44px; font-size: 12px; }
+
+  /* Midnight reset info badge */
+  .auto-reset-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--pink-50), var(--blue-50));
+    border: 1px solid var(--pink-100);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-size: 12px;
+    color: var(--pink-500);
+  }
+  .auto-reset-badge span.label { font-weight: 500; }
+  .auto-reset-badge span.sub { color: var(--text-muted); font-size: 11px; margin-left: auto; }
+
+  .btn-notif {
+    width: 100%;
+    padding: 13px;
+    border-radius: var(--radius-pill);
+    border: 1.5px solid var(--pink-200);
+    background: white;
+    color: var(--pink-500);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s;
+  }
+  .btn-notif:hover { background: var(--pink-50); }
+  .btn-notif.active {
+    background: linear-gradient(135deg, var(--pink-100), var(--blue-100));
+    border-color: var(--blue-200);
+    color: var(--blue-600);
+  }
+
+  .btn-reset {
+    width: 100%; margin-top: 10px;
+    padding: 11px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--gray-200);
+    background: white;
+    color: var(--gray-400);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-reset:hover { border-color: var(--pink-200); color: var(--pink-400); }
+
+  .countdown-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 8px;
+    min-height: 16px;
+  }
+
+  .toast-container {
+    position: fixed; bottom: 24px; left: 0; right: 0;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 8px; pointer-events: none; z-index: 999;
+  }
+  .toast {
+    background: white;
+    border: 1px solid var(--pink-100);
+    border-radius: var(--radius-pill);
+    padding: 10px 20px;
+    font-size: 13px; font-weight: 500;
+    color: var(--pink-500);
+    box-shadow: 0 4px 20px rgba(212,83,126,0.15);
+    animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    pointer-events: none;
+  }
+  .toast.out { animation: toastOut 0.25s ease forwards; }
+  @keyframes toastIn { from { opacity:0; transform: translateY(16px) scale(0.92); } to { opacity:1; transform: translateY(0) scale(1); } }
+  @keyframes toastOut { from { opacity:1; transform: translateY(0); } to { opacity:0; transform: translateY(8px); } }
+
+  .all-done-banner {
+    background: linear-gradient(135deg, var(--pink-50), var(--blue-50));
+    border: 1px solid var(--pink-100);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+    display: none;
+  }
+  .all-done-banner.show { display: block; animation: toastIn 0.4s ease; }
+  .all-done-banner .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+  .all-done-banner h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--pink-500); margin-bottom: 4px; }
+  .all-done-banner p { font-size: 13px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header class="app-header" style="max-width:480px; margin:0 auto;">
+  <div class="header-top">
+    <div class="app-title">Rutinku 🌸</div>
+    <div class="date-chip" id="date-chip">—</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 dari 16 selesai</span>
+      <span class="prog-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    </div>
+    <div class="motivasi-text" id="motivasi">Yuk mulai harumu! ✨</div>
+  </div>
+</header>
+
+<main class="main">
+  <div class="all-done-banner" id="all-done">
+    <span class="emoji">🌺</span>
+    <h3>Semua selesai!</h3>
+    <p>Kamu luar biasa hari ini. Selamat beristirahat 💕</p>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot pink"></div>
+      <span class="section-label">Pagi</span>
+      <span class="section-count" id="count-pagi">0/8</span>
+    </div>
+    <div id="group-pagi"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot blue"></div>
+      <span class="section-label">Siang</span>
+      <span class="section-count" id="count-siang">0/2</span>
+    </div>
+    <div id="group-siang"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-dot pink"></div>
+      <span class="section-label">Malam</span>
+      <span class="section-count" id="count-malam">0/6</span>
+    </div>
+    <div id="group-malam"></div>
+  </div>
+
+  <div class="notif-panel">
+    <div class="notif-panel-title">🔔 Pengingat Otomatis</div>
+
+    <!-- Auto midnight reset info -->
+    <div class="auto-reset-badge">
+      <span>🌙</span>
+      <span class="label">Reset otomatis setiap tengah malam WIB</span>
+      <span class="sub" id="countdown-badge">—</span>
+    </div>
+
+    <ul class="notif-schedule">
+      <li><span class="notif-time">05.30</span> Waktunya bangun & minum air!</li>
+      <li><span class="notif-time">06.00</span> Cuci muka, sikat gigi, sarapan</li>
+      <li><span class="notif-time">07.00</span> Jangan lupa minum collagen!</li>
+      <li><span class="notif-time">07.30</span> Ayo olahraga sebentar! 💪</li>
+      <li><span class="notif-time">08.30</span> Scrub, mandi, skincare pagi</li>
+      <li><span class="notif-time">12.00</span> Waktunya makan siang & istirahat</li>
+      <li><span class="notif-time">19.00</span> Mandi malam & vitamin rambut</li>
+      <li><span class="notif-time">20.00</span> Skincare & bodycare malam</li>
+      <li><span class="notif-time">21.00</span> Minum kitfee & natur-E</li>
+      <li><span class="notif-time">22.00</span> Sikat gigi & bersiap bobo 🌙</li>
+    </ul>
+    <button class="btn-notif" id="btn-notif" onclick="toggleNotif()">
+      <span id="notif-icon">🔔</span>
+      <span id="notif-label">Aktifkan Notifikasi</span>
+    </button>
+    <div id="notif-status" style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:8px; min-height:16px;"></div>
+    <button class="btn-reset" onclick="resetAll()">🔄 Reset progress hari ini</button>
+    <div class="countdown-text" id="countdown-text"></div>
+  </div>
+</main>
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ── CONSTANTS ──────────────────────────────────────────────
+const STORAGE_KEY_DONE    = 'rutinku_done';
+const STORAGE_KEY_DATE    = 'rutinku_date';
+const STORAGE_KEY_NOTIF   = 'rutinku_notif';  // persist notif preference
+const STORAGE_KEY_FIRED   = 'rutinku_fired';  // notifs already fired today
+
+const TASKS = {
+  pagi: [
+    { id:'p0', icon:'💧', color:'pink', name:'Minum air putih', sub:'Segelas besar setelah bangun' },
+    { id:'p1', icon:'🪥', color:'pink', name:'Cuci muka & sikat gigi', sub:'Bersih dan segar!' },
+    { id:'p2', icon:'🍌', color:'pink', name:'Sarapan buah / roti gandum', sub:'Tanpa gula tambahan' },
+    { id:'p3', icon:'✨', color:'pink', name:'Minum collagen', sub:'Setelah sarapan' },
+    { id:'p4', icon:'🏃', color:'blue', name:'Olahraga sebentar', sub:'15–30 menit sudah cukup' },
+    { id:'p5', icon:'🫧', color:'blue', name:'Scrub', sub:'Sebelum mandi' },
+    { id:'p6', icon:'🚿', color:'blue', name:'Mandi pagi', sub:'Segar dan bersemangat!' },
+    { id:'p7', icon:'🌸', color:'pink', name:'Skincare & bodycare', sub:'Setelah mandi pagi' },
+  ],
+  siang: [
+    { id:'s0', icon:'🍱', color:'blue', name:'Makan siang secukupnya', sub:'Sekitar jam 12.00' },
+    { id:'s1', icon:'😴', color:'blue', name:'Istirahat / tidur siang', sub:'Isi energi untuk sore' },
+  ],
+  malam: [
+    { id:'m0', icon:'🛁', color:'blue', name:'Mandi malam (jangan cuci rambut)', sub:'Tanpa keramas' },
+    { id:'m1', icon:'💆', color:'pink', name:'Pakai vitamin rambut', sub:'Setelah mandi malam' },
+    { id:'m2', icon:'🌙', color:'pink', name:'Skincare malam', sub:'Jangan di-skip!' },
+    { id:'m3', icon:'🧴', color:'pink', name:'Bodycare malam', sub:'Kulit halus & lembut' },
+    { id:'m4', icon:'☕', color:'blue', name:'Minum kitfee & natur-E', sub:'Suplemen malam hari' },
+    { id:'m5', icon:'🪥', color:'pink', name:'Sikat gigi & bobo', sub:'Selamat beristirahat 💕' },
+  ]
+};
+
+const MOTIVASI = [
+  'Yuk mulai harumu! ✨',
+  'Bagus! Terus semangat! 🌸',
+  'Setengah jalan, kamu keren! 💪',
+  'Hampir selesai, ayo! 🌺',
+  'SEMPURNA! Kamu luar biasa! 🎉'
+];
+
+const NOTIF_SCHEDULE = [
+  { h:5,  m:30, msg:'💧 Waktunya bangun & minum air putih!' },
+  { h:6,  m:0,  msg:'🪥 Cuci muka, sikat gigi, dan sarapan ya!' },
+  { h:7,  m:0,  msg:'✨ Jangan lupa minum collagen!' },
+  { h:7,  m:30, msg:'🏃 Ayo olahraga sebentar!' },
+  { h:8,  m:30, msg:'🚿 Saatnya scrub, mandi, & skincare pagi!' },
+  { h:12, m:0,  msg:'🍱 Waktunya makan siang & istirahat!' },
+  { h:19, m:0,  msg:'🛁 Jangan lupa mandi malam & vitamin rambut!' },
+  { h:20, m:0,  msg:'🌙 Skincare & bodycare malam yuk!' },
+  { h:21, m:0,  msg:'☕ Minum kitfee & natur-E dulu!' },
+  { h:22, m:0,  msg:'🪥 Sikat gigi & bersiap bobo ya!' },
+];
+
+// ── STATE ──────────────────────────────────────────────
+let done = new Set();
+let notifOn = false;
+let tickInterval = null;
+let firedToday = new Set();
+
+// ── DATE HELPERS (WIB = UTC+7) ──────────────────────────────────────────────
+function getWIBDate() {
+  // Returns a YYYY-MM-DD string in WIB timezone
+  const now = new Date();
+  // Offset to WIB: UTC+7 = +420 minutes
+  const wibOffset = 7 * 60;
+  const localOffset = -now.getTimezoneOffset(); // local offset in minutes
+  const diffMs = (wibOffset - localOffset) * 60 * 1000;
+  const wib = new Date(now.getTime() + diffMs);
+  return wib.toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+function getWIBNow() {
+  const now = new Date();
+  const wibOffset = 7 * 60;
+  const localOffset = -now.getTimezoneOffset();
+  const diffMs = (wibOffset - localOffset) * 60 * 1000;
+  return new Date(now.getTime() + diffMs);
+}
+
+// ── STORAGE ──────────────────────────────────────────────
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY_DONE, JSON.stringify([...done]));
+    localStorage.setItem(STORAGE_KEY_DATE, getWIBDate());
+    localStorage.setItem(STORAGE_KEY_FIRED, JSON.stringify([...firedToday]));
+  } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const savedDate = localStorage.getItem(STORAGE_KEY_DATE);
+    const todayWIB  = getWIBDate();
+
+    if (savedDate === todayWIB) {
+      // Same day → restore progress
+      const savedDone = localStorage.getItem(STORAGE_KEY_DONE);
+      if (savedDone) done = new Set(JSON.parse(savedDone));
+      const savedFired = localStorage.getItem(STORAGE_KEY_FIRED);
+      if (savedFired) firedToday = new Set(JSON.parse(savedFired));
+    } else {
+      // New day → clear progress & fired log
+      done.clear();
+      firedToday.clear();
+      saveState();
+    }
+
+    // Restore notif preference
+    const savedNotif = localStorage.getItem(STORAGE_KEY_NOTIF);
+    if (savedNotif === 'true') {
+      // Re-activate notifications silently if previously enabled
+      if ('Notification' in window && Notification.permission === 'granted') {
+        startNotif(true); // silent = true, no toast
+      }
+    }
+  } catch(e) {}
+}
+
+// ── RENDER ──────────────────────────────────────────────
+function renderGroup(group, containerId) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  TASKS[group].forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'task-card' + (done.has(t.id) ? ' done' : '');
+    card.dataset.id = t.id;
+    card.innerHTML = `
+      <div class="check-btn"></div>
+      <div class="task-icon ${t.color}">${t.icon}</div>
+      <div class="task-body">
+        <div class="task-name">${t.name}</div>
+        <div class="task-sub">${t.sub}</div>
+      </div>`;
+    card.addEventListener('click', () => toggleTask(t.id, t.name));
+    el.appendChild(card);
+  });
+}
+
+function renderAll() {
+  renderGroup('pagi', 'group-pagi');
+  renderGroup('siang', 'group-siang');
+  renderGroup('malam', 'group-malam');
+  updateProgress();
+}
+
+// ── TOGGLE ──────────────────────────────────────────────
+function toggleTask(id, name) {
+  if (done.has(id)) {
+    done.delete(id);
+    showToast('↩️ ' + name);
+  } else {
+    done.add(id);
+    showToast('✅ ' + name);
+  }
+  document.querySelectorAll('.task-card').forEach(card => {
+    if (card.dataset.id === id) card.classList.toggle('done', done.has(id));
+  });
+  updateProgress();
+  saveState();
+}
+
+// ── PROGRESS ──────────────────────────────────────────────
+const TOTAL = 16;
+function updateProgress() {
+  const n = done.size;
+  const pct = Math.round((n / TOTAL) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = n + ' dari ' + TOTAL + ' selesai';
+  document.getElementById('prog-pct').textContent = pct + '%';
+
+  const idx = Math.min(Math.floor(n / (TOTAL / (MOTIVASI.length - 1))), MOTIVASI.length - 1);
+  document.getElementById('motivasi').textContent = MOTIVASI[idx];
+
+  const pg = TASKS.pagi.filter(t => done.has(t.id)).length;
+  const sg = TASKS.siang.filter(t => done.has(t.id)).length;
+  const mg = TASKS.malam.filter(t => done.has(t.id)).length;
+  document.getElementById('count-pagi').textContent = pg + '/' + TASKS.pagi.length;
+  document.getElementById('count-siang').textContent = sg + '/' + TASKS.siang.length;
+  document.getElementById('count-malam').textContent = mg + '/' + TASKS.malam.length;
+
+  document.getElementById('all-done').classList.toggle('show', n === TOTAL);
+}
+
+// ── DATE CHIP ──────────────────────────────────────────────
+function updateDate() {
+  const now = getWIBNow();
+  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
+  document.getElementById('date-chip').textContent =
+    days[now.getUTCDay()] + ', ' + now.getUTCDate() + ' ' + months[now.getUTCMonth()];
+}
+
+// ── COUNTDOWN TO MIDNIGHT WIB ──────────────────────────────────────────────
+function updateCountdown() {
+  const wib = getWIBNow();
+  // Seconds until next midnight WIB
+  const h = wib.getUTCHours();
+  const m = wib.getUTCMinutes();
+  const s = wib.getUTCSeconds();
+  const totalSecsLeft = (24 * 3600) - (h * 3600 + m * 60 + s);
+  const hh = String(Math.floor(totalSecsLeft / 3600)).padStart(2,'0');
+  const mm = String(Math.floor((totalSecsLeft % 3600) / 60)).padStart(2,'0');
+  const ss = String(totalSecsLeft % 60).padStart(2,'0');
+  const txt = 'Reset dalam ' + hh + ':' + mm + ':' + ss;
+  document.getElementById('countdown-badge').textContent = hh + ':' + mm + ':' + ss;
+  document.getElementById('countdown-text').textContent = txt;
+}
+
+// ── RESET ──────────────────────────────────────────────
+function resetAll() {
+  done.clear();
+  firedToday.clear();
+  saveState();
+  renderAll();
+  showToast('🔄 Progress direset!');
+}
+
+// Auto midnight reset — check every second
+let lastWIBDate = getWIBDate();
+function checkMidnightReset() {
+  const todayWIB = getWIBDate();
+  if (todayWIB !== lastWIBDate) {
+    lastWIBDate = todayWIB;
+    done.clear();
+    firedToday.clear();
+    saveState();
+    renderAll();
+    updateDate();
+    showToast('🌙 Hari baru! Progress direset otomatis');
+    // Re-enable notif scheduler for new day without re-requesting permission
+    if (notifOn) {
+      // notifOn already true, firedToday cleared → notifs will fire fresh today
+    }
+  }
+  updateCountdown();
+}
+
+// ── TOAST ──────────────────────────────────────────────
+function showToast(msg) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('out');
+    setTimeout(() => toast.remove(), 280);
+  }, 2200);
+}
+
+// ── NOTIFICATION ──────────────────────────────────────────────
+function toggleNotif() {
+  if (!('Notification' in window)) {
+    showToast('⚠️ Browser ini tidak mendukung notifikasi');
+    return;
+  }
+  if (notifOn) {
+    notifOn = false;
+    if (tickInterval) { clearInterval(tickInterval); tickInterval = null; }
+    document.getElementById('btn-notif').classList.remove('active');
+    document.getElementById('notif-icon').textContent = '🔔';
+    document.getElementById('notif-label').textContent = 'Aktifkan Notifikasi';
+    document.getElementById('notif-status').textContent = '';
+    try { localStorage.setItem(STORAGE_KEY_NOTIF, 'false'); } catch(e){}
+    showToast('🔕 Notifikasi dimatikan');
+    return;
+  }
+  if (Notification.permission === 'granted') {
+    startNotif(false);
+  } else if (Notification.permission === 'denied') {
+    document.getElementById('notif-status').textContent = '⚠️ Izin notifikasi ditolak di browser. Aktifkan di pengaturan browser.';
+    showToast('⚠️ Izin notifikasi ditolak');
+  } else {
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        startNotif(false);
+      } else {
+        document.getElementById('notif-status').textContent = '⚠️ Izin tidak diberikan.';
+        showToast('⚠️ Izin notifikasi tidak diberikan');
+      }
+    });
+  }
+}
+
+// silent = true → no toast (used on auto-restore)
+function startNotif(silent) {
+  notifOn = true;
+  document.getElementById('btn-notif').classList.add('active');
+  document.getElementById('notif-icon').textContent = '🔕';
+  document.getElementById('notif-label').textContent = 'Notifikasi Aktif — Klik untuk matikan';
+  document.getElementById('notif-status').textContent = '✅ Pengingat akan tampil sesuai jadwal & otomatis tiap hari';
+  if (!silent) showToast('🔔 Notifikasi aktif!');
+  try { localStorage.setItem(STORAGE_KEY_NOTIF, 'true'); } catch(e){}
+
+  if (tickInterval) clearInterval(tickInterval);
+  tickInterval = setInterval(checkNotifSchedule, 30000);
+  checkNotifSchedule();
+}
+
+function checkNotifSchedule() {
+  if (!notifOn) return;
+  if (Notification.permission !== 'granted') return;
+
+  const wib = getWIBNow();
+  const h = wib.getUTCHours();
+  const m = wib.getUTCMinutes();
+  const todayKey = getWIBDate();
+
+  NOTIF_SCHEDULE.forEach(slot => {
+    const key = todayKey + '-' + slot.h + ':' + String(slot.m).padStart(2,'0');
+    if (firedToday.has(key)) return;
+    if (h === slot.h && m === slot.m) {
+      firedToday.add(key);
+      saveState(); // persist fired list so refresh doesn't re-fire
+      try {
+        new Notification('Rutinku Harian 🌸', {
+          body: slot.msg,
+          icon: 'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',
+          badge: 'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',
+          tag: key,
+          requireInteraction: false
+        });
+      } catch(e) {}
+    }
+  });
+}
+
+// ── MASTER TICK (every second) ──────────────────────────────────────────────
+setInterval(checkMidnightReset, 1000);
+
+// ── INIT ──────────────────────────────────────────────
+loadState();
+updateDate();
+renderAll();
+updateCountdown();
+</script>
+</body>
+</html>
