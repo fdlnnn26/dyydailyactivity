@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rutinku Harian 🌸</title>
+<title>Rutinku Harian 🌸 - Dyy Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -42,6 +42,55 @@
     background: linear-gradient(145deg, #fff0f7 0%, #f0f5ff 50%, #fff5fb 100%);
     min-height: 100vh;
     color: var(--text);
+  }
+
+  /* Animasi Masuk Baru untuk Dyy */
+  @keyframes welcomeBounce {
+    0% { transform: translateY(30px) scale(0.8); opacity: 0; }
+    60% { transform: translateY(-10px) scale(1.05); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+
+  .welcome-dyy {
+    background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+    color: white;
+    padding: 18px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(255, 175, 189, 0.3);
+    animation: welcomeBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 2px white solid;
+  }
+
+  .welcome-dyy h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 4px;
+    color: white;
+  }
+
+  .beauty-rules {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--pink-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+  }
+
+  .beauty-rules span {
+    background: var(--pink-400);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    text-transform: uppercase;
   }
 
   .app-header {
@@ -175,7 +224,6 @@
   .notif-schedule li:last-child { border-bottom: none; }
   .notif-time { font-weight: 600; color: var(--pink-400); min-width: 44px; font-size: 12px; }
 
-  /* Midnight reset info badge */
   .auto-reset-badge {
     display: flex;
     align-items: center;
@@ -287,10 +335,19 @@
 </header>
 
 <main class="main">
+  <div class="welcome-dyy">
+    <h2>Semangat Cantik, Dyy! ✨</h2>
+    <p style="font-size: 13px; opacity: 0.9;">Consistency is the key to your glow up.</p>
+    
+    <div class="beauty-rules">
+      <span>Golden Rules</span> 🚫 No Sugar • 🚫 No Junkfood
+    </div>
+  </div>
+
   <div class="all-done-banner" id="all-done">
     <span class="emoji">🌺</span>
     <h3>Semua selesai!</h3>
-    <p>Kamu luar biasa hari ini. Selamat beristirahat 💕</p>
+    <p id="all-done-text">Kamu luar biasa hari ini, Dyy. Selamat beristirahat 💕</p>
   </div>
 
   <div class="section">
@@ -323,7 +380,6 @@
   <div class="notif-panel">
     <div class="notif-panel-title">🔔 Pengingat Otomatis</div>
 
-    <!-- Auto midnight reset info -->
     <div class="auto-reset-badge">
       <span>🌙</span>
       <span class="label">Reset otomatis setiap tengah malam WIB</span>
@@ -358,8 +414,8 @@
 // ── CONSTANTS ──────────────────────────────────────────────
 const STORAGE_KEY_DONE    = 'rutinku_done';
 const STORAGE_KEY_DATE    = 'rutinku_date';
-const STORAGE_KEY_NOTIF   = 'rutinku_notif';  // persist notif preference
-const STORAGE_KEY_FIRED   = 'rutinku_fired';  // notifs already fired today
+const STORAGE_KEY_NOTIF   = 'rutinku_notif';
+const STORAGE_KEY_FIRED   = 'rutinku_fired';
 
 const TASKS = {
   pagi: [
@@ -387,11 +443,11 @@ const TASKS = {
 };
 
 const MOTIVASI = [
-  'Yuk mulai harumu! ✨',
-  'Bagus! Terus semangat! 🌸',
-  'Setengah jalan, kamu keren! 💪',
-  'Hampir selesai, ayo! 🌺',
-  'SEMPURNA! Kamu luar biasa! 🎉'
+  'Yuk mulai harumu, Dyy! ✨',
+  'Dyy hebat! Terus semangat! 🌸',
+  'Setengah jalan, Dyy keren! 💪',
+  'Dyy hampir selesai, ayo! 🌺',
+  'SEMPURNA! Dyy luar biasa! 🎉'
 ];
 
 const NOTIF_SCHEDULE = [
@@ -415,14 +471,12 @@ let firedToday = new Set();
 
 // ── DATE HELPERS (WIB = UTC+7) ──────────────────────────────────────────────
 function getWIBDate() {
-  // Returns a YYYY-MM-DD string in WIB timezone
   const now = new Date();
-  // Offset to WIB: UTC+7 = +420 minutes
   const wibOffset = 7 * 60;
-  const localOffset = -now.getTimezoneOffset(); // local offset in minutes
+  const localOffset = -now.getTimezoneOffset();
   const diffMs = (wibOffset - localOffset) * 60 * 1000;
   const wib = new Date(now.getTime() + diffMs);
-  return wib.toISOString().slice(0, 10); // YYYY-MM-DD
+  return wib.toISOString().slice(0, 10);
 }
 
 function getWIBNow() {
@@ -448,24 +502,20 @@ function loadState() {
     const todayWIB  = getWIBDate();
 
     if (savedDate === todayWIB) {
-      // Same day → restore progress
       const savedDone = localStorage.getItem(STORAGE_KEY_DONE);
       if (savedDone) done = new Set(JSON.parse(savedDone));
       const savedFired = localStorage.getItem(STORAGE_KEY_FIRED);
       if (savedFired) firedToday = new Set(JSON.parse(savedFired));
     } else {
-      // New day → clear progress & fired log
       done.clear();
       firedToday.clear();
       saveState();
     }
 
-    // Restore notif preference
     const savedNotif = localStorage.getItem(STORAGE_KEY_NOTIF);
     if (savedNotif === 'true') {
-      // Re-activate notifications silently if previously enabled
       if ('Notification' in window && Notification.permission === 'granted') {
-        startNotif(true); // silent = true, no toast
+        startNotif(true);
       }
     }
   } catch(e) {}
@@ -505,7 +555,12 @@ function toggleTask(id, name) {
     showToast('↩️ ' + name);
   } else {
     done.add(id);
-    showToast('✅ ' + name);
+    // Pengingat Gula & Junkfood setiap kelipatan 4 tugas
+    if(done.size % 4 === 0 && done.size !== 16) {
+        showToast('🧁 Ingat Dyy: Stop Gula & Junkfood!');
+    } else {
+        showToast('✅ ' + name);
+    }
   }
   document.querySelectorAll('.task-card').forEach(card => {
     if (card.dataset.id === id) card.classList.toggle('done', done.has(id));
@@ -548,7 +603,6 @@ function updateDate() {
 // ── COUNTDOWN TO MIDNIGHT WIB ──────────────────────────────────────────────
 function updateCountdown() {
   const wib = getWIBNow();
-  // Seconds until next midnight WIB
   const h = wib.getUTCHours();
   const m = wib.getUTCMinutes();
   const s = wib.getUTCSeconds();
@@ -570,7 +624,6 @@ function resetAll() {
   showToast('🔄 Progress direset!');
 }
 
-// Auto midnight reset — check every second
 let lastWIBDate = getWIBDate();
 function checkMidnightReset() {
   const todayWIB = getWIBDate();
@@ -582,10 +635,6 @@ function checkMidnightReset() {
     renderAll();
     updateDate();
     showToast('🌙 Hari baru! Progress direset otomatis');
-    // Re-enable notif scheduler for new day without re-requesting permission
-    if (notifOn) {
-      // notifOn already true, firedToday cleared → notifs will fire fresh today
-    }
   }
   updateCountdown();
 }
@@ -623,7 +672,7 @@ function toggleNotif() {
   if (Notification.permission === 'granted') {
     startNotif(false);
   } else if (Notification.permission === 'denied') {
-    document.getElementById('notif-status').textContent = '⚠️ Izin notifikasi ditolak di browser. Aktifkan di pengaturan browser.';
+    document.getElementById('notif-status').textContent = '⚠️ Izin notifikasi ditolak browser.';
     showToast('⚠️ Izin notifikasi ditolak');
   } else {
     Notification.requestPermission().then(perm => {
@@ -631,19 +680,18 @@ function toggleNotif() {
         startNotif(false);
       } else {
         document.getElementById('notif-status').textContent = '⚠️ Izin tidak diberikan.';
-        showToast('⚠️ Izin notifikasi tidak diberikan');
+        showToast('⚠️ Izin tidak diberikan');
       }
     });
   }
 }
 
-// silent = true → no toast (used on auto-restore)
 function startNotif(silent) {
   notifOn = true;
   document.getElementById('btn-notif').classList.add('active');
   document.getElementById('notif-icon').textContent = '🔕';
-  document.getElementById('notif-label').textContent = 'Notifikasi Aktif — Klik untuk matikan';
-  document.getElementById('notif-status').textContent = '✅ Pengingat akan tampil sesuai jadwal & otomatis tiap hari';
+  document.getElementById('notif-label').textContent = 'Notifikasi Aktif';
+  document.getElementById('notif-status').textContent = '✅ Pengingat aktif untuk Dyy';
   if (!silent) showToast('🔔 Notifikasi aktif!');
   try { localStorage.setItem(STORAGE_KEY_NOTIF, 'true'); } catch(e){}
 
@@ -666,24 +714,20 @@ function checkNotifSchedule() {
     if (firedToday.has(key)) return;
     if (h === slot.h && m === slot.m) {
       firedToday.add(key);
-      saveState(); // persist fired list so refresh doesn't re-fire
+      saveState();
       try {
         new Notification('Rutinku Harian 🌸', {
-          body: slot.msg,
+          body: 'Dyy, ' + slot.msg,
           icon: 'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',
-          badge: 'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',
           tag: key,
-          requireInteraction: false
         });
       } catch(e) {}
     }
   });
 }
 
-// ── MASTER TICK (every second) ──────────────────────────────────────────────
 setInterval(checkMidnightReset, 1000);
 
-// ── INIT ──────────────────────────────────────────────
 loadState();
 updateDate();
 renderAll();
