@@ -44,293 +44,232 @@
     overflow-x: hidden;
   }
 
-  /* ══ SPLASH SCREEN ══ */
-  #splash {
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    pointer-events: all;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  /* ══ SPLASH ══ */
+  #splash { position:fixed;inset:0;z-index:1000;pointer-events:all;display:flex;align-items:center;justify-content:center; }
+  .splash-panel { position:absolute;left:0;right:0;height:50.5%;background:linear-gradient(120deg,#ff85a1 0%,#ffb3c6 35%,#c084fc 70%,#93c5fd 100%);will-change:transform; }
+  .splash-panel.top { top:0; }
+  .splash-panel.bottom { bottom:0; }
+  .splash-panel::after { content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.18) 50%,transparent 70%);background-size:200% 100%;animation:splashShimmer 2s linear infinite; }
+  @keyframes splashShimmer { from{background-position:-100% 0} to{background-position:200% 0} }
+  .splash-panel.top { border-bottom:1px solid rgba(255,255,255,0.5); }
+  .splash-panel.bottom { border-top:1px solid rgba(255,255,255,0.5); }
+  .splash-content { position:relative;z-index:2;text-align:center;color:white;transition:opacity 0.25s ease,transform 0.25s ease;text-shadow:0 2px 16px rgba(0,0,0,0.12); }
+  .splash-content.fade-out { opacity:0;transform:scale(0.92); }
+  .splash-title { font-family:'Playfair Display',serif;font-size:clamp(30px,9vw,50px);font-weight:600;line-height:1.15;animation:sIn 0.6s 0.1s cubic-bezier(0.34,1.56,0.64,1) both; }
+  .splash-sub { font-size:13.5px;opacity:0.9;margin-top:8px;letter-spacing:0.3px;animation:sIn 0.5s 0.25s ease both; }
+  .splash-tap { font-size:11px;opacity:0.6;margin-top:24px;letter-spacing:1px;text-transform:uppercase;animation:sIn 0.4s 0.5s ease both,tapPulse 1.5s 1s ease-in-out infinite; }
+  @keyframes sIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes tapPulse { 0%,100%{opacity:0.5} 50%{opacity:0.9} }
+  #splash.dismiss .splash-panel.top { transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);transform:translateY(-100%); }
+  #splash.dismiss .splash-panel.bottom { transition:transform 0.8s cubic-bezier(0.77,0,0.175,1);transform:translateY(100%); }
+  #splash.gone { display:none; }
 
-  .splash-panel {
-    position: absolute;
-    left: 0; right: 0;
-    height: 50.5%;
-    background: linear-gradient(120deg, #ff85a1 0%, #ffb3c6 35%, #c084fc 70%, #93c5fd 100%);
-    will-change: transform;
-  }
-  .splash-panel.top    { top: 0; }
-  .splash-panel.bottom { bottom: 0; }
-
-  /* Shimmer stripe on panels */
-  .splash-panel::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
-    background-size: 200% 100%;
-    animation: splashShimmer 2s linear infinite;
-  }
-  @keyframes splashShimmer {
-    from { background-position: -100% 0; }
-    to   { background-position: 200% 0; }
-  }
-
-  /* Gap line between panels */
-  .splash-panel.top    { border-bottom: 1px solid rgba(255,255,255,0.5); }
-  .splash-panel.bottom { border-top:    1px solid rgba(255,255,255,0.5); }
-
-  .splash-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: white;
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    text-shadow: 0 2px 16px rgba(0,0,0,0.12);
-  }
-  .splash-content.fade-out { opacity: 0; transform: scale(0.92); }
-
-  .splash-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(30px, 9vw, 50px);
-    font-weight: 600;
-    line-height: 1.15;
-    animation: sIn 0.6s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
-  }
-  .splash-sub {
-    font-size: 13.5px;
-    opacity: 0.9;
-    margin-top: 8px;
-    letter-spacing: 0.3px;
-    animation: sIn 0.5s 0.25s ease both;
-  }
-  .splash-tap {
-    font-size: 11px;
-    opacity: 0.6;
-    margin-top: 24px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    animation: sIn 0.4s 0.5s ease both, tapPulse 1.5s 1s ease-in-out infinite;
-  }
-  @keyframes sIn {
-    from { opacity:0; transform: translateY(14px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
-  @keyframes tapPulse {
-    0%, 100% { opacity: 0.5; }
-    50%       { opacity: 0.9; }
-  }
-
-  /* Dismiss: top slides up, bottom slides down */
-  #splash.dismiss .splash-panel.top    { transition: transform 0.8s cubic-bezier(0.77,0,0.175,1); transform: translateY(-100%); }
-  #splash.dismiss .splash-panel.bottom { transition: transform 0.8s cubic-bezier(0.77,0,0.175,1); transform: translateY(100%); }
-  #splash.gone { display: none; }
-
-  /* ══ FALLING FLOWERS ══ */
-  #flower-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
-  .petal {
-    position: absolute; top: -40px; opacity: 0;
-    animation: petalFall linear infinite;
-    user-select: none;
-  }
+  /* ══ FLOWERS ══ */
+  #flower-canvas { position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden; }
+  .petal { position:absolute;top:-40px;opacity:0;animation:petalFall linear infinite;user-select:none; }
   @keyframes petalFall {
-    0%   { transform: translateY(0) rotate(0deg) translateX(0px); opacity: 0; }
-    6%   { opacity: 0.55; }
-    50%  { transform: translateY(55vh) rotate(180deg) translateX(20px); }
-    90%  { opacity: 0.3; }
-    100% { transform: translateY(112vh) rotate(370deg) translateX(-12px); opacity: 0; }
+    0%   { transform:translateY(0) rotate(0deg) translateX(0px);opacity:0; }
+    6%   { opacity:0.55; }
+    50%  { transform:translateY(55vh) rotate(180deg) translateX(20px); }
+    90%  { opacity:0.3; }
+    100% { transform:translateY(112vh) rotate(370deg) translateX(-12px);opacity:0; }
   }
+
+  /* ══ BOTTOM NAV ══ */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    background: white; border-top: 1px solid var(--pink-100);
+    display: flex; max-width: 480px; margin: 0 auto;
+    box-shadow: 0 -4px 20px rgba(212,83,126,0.10);
+  }
+  .nav-btn {
+    flex: 1; padding: 10px 4px 12px; border: none; background: transparent;
+    cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 3px;
+    font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--text-muted);
+    transition: color 0.2s; -webkit-tap-highlight-color: transparent;
+  }
+  .nav-btn .nav-icon { font-size: 20px; line-height: 1; }
+  .nav-btn.active { color: var(--pink-500); }
+  .nav-btn.active .nav-icon { animation: navPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes navPop { from{transform:scale(0.7)} to{transform:scale(1)} }
+
+  /* ══ PAGES ══ */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ══ SHARED ANIMATIONS ══ */
+  @keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes gradShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
   /* ══ WELCOME CARD ══ */
-  @keyframes floatUp {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-6px); }
-  }
-  @keyframes gradShift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
   .welcome-dyy {
-    background: linear-gradient(135deg, #ff85a1, #ffb347, #ff85c2, #c084fc);
-    background-size: 300% 300%;
-    animation: gradShift 6s ease infinite;
-    color: white;
-    padding: 20px 18px;
-    border-radius: var(--radius);
-    margin-bottom: 12px;
-    text-align: center;
-    box-shadow: 0 12px 32px rgba(255,133,161,0.3);
-    position: relative;
-    overflow: hidden;
+    background:linear-gradient(135deg,#ff85a1,#ffb347,#ff85c2,#c084fc);
+    background-size:300% 300%;animation:gradShift 6s ease infinite;
+    color:white;padding:20px 18px;border-radius:var(--radius);margin-bottom:12px;
+    text-align:center;box-shadow:0 12px 32px rgba(255,133,161,0.3);
+    position:relative;overflow:hidden;
   }
-  .welcome-dyy::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -60%;
-    width: 50%; height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
-    animation: wShimmer 3.5s linear infinite;
-    transform: skewX(-15deg);
-  }
-  @keyframes wShimmer { from { left: -60%; } to { left: 130%; } }
+  .welcome-dyy::before { content:'';position:absolute;top:0;left:-60%;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.14),transparent);animation:wShimmer 3.5s linear infinite;transform:skewX(-15deg); }
+  @keyframes wShimmer { from{left:-60%} to{left:130%} }
+  .welcome-dyy .float-emoji { display:inline-block;font-size:26px;animation:floatUp 2.5s ease-in-out infinite;margin-bottom:4px;position:relative; }
+  .welcome-dyy h2 { font-family:'Playfair Display',serif;font-size:20px;margin-bottom:4px;color:white;position:relative; }
+  .welcome-dyy p  { font-size:12.5px;opacity:0.92;position:relative; }
+  .beauty-rules { background:rgba(255,255,255,0.2);padding:9px 12px;border-radius:var(--radius-sm);margin-top:12px;font-size:12px;color:white;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:500;border:1px solid rgba(255,255,255,0.28);position:relative; }
+  .beauty-rules .badge { background:rgba(255,255,255,0.28);padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase; }
 
-  .welcome-dyy .float-emoji { display: inline-block; font-size: 26px; animation: floatUp 2.5s ease-in-out infinite; margin-bottom: 4px; position: relative; }
-  .welcome-dyy h2 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 4px; color: white; position: relative; }
-  .welcome-dyy p  { font-size: 12.5px; opacity: 0.92; position: relative; }
-  .beauty-rules {
-    background: rgba(255,255,255,0.2);
-    padding: 9px 12px;
-    border-radius: var(--radius-sm);
-    margin-top: 12px;
-    font-size: 12px; color: white;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-weight: 500;
-    border: 1px solid rgba(255,255,255,0.28);
-    position: relative;
-  }
-  .beauty-rules .badge { background: rgba(255,255,255,0.28); padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+  /* ══ STREAK ══ */
+  .streak-card { background:white;border:1px solid var(--pink-100);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow-card); }
+  .streak-flame { font-size:30px;animation:floatUp 2s ease-in-out infinite;line-height:1; }
+  .streak-body { flex:1; }
+  .streak-num { font-family:'Playfair Display',serif;font-size:28px;font-weight:600;color:var(--pink-500);line-height:1; }
+  .streak-label { font-size:12px;color:var(--text-muted);margin-top:2px; }
+  .streak-best { font-size:11px;background:var(--pink-50);color:var(--pink-400);border:1px solid var(--pink-100);border-radius:var(--radius-pill);padding:4px 10px;font-weight:500;white-space:nowrap; }
 
-  /* ══ STREAK CARD ══ */
-  .streak-card { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-card); }
-  .streak-flame { font-size: 30px; animation: floatUp 2s ease-in-out infinite; line-height: 1; }
-  .streak-body { flex: 1; }
-  .streak-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--pink-500); line-height: 1; }
-  .streak-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .streak-best { font-size: 11px; background: var(--pink-50); color: var(--pink-400); border: 1px solid var(--pink-100); border-radius: var(--radius-pill); padding: 4px 10px; font-weight: 500; white-space: nowrap; }
+  /* ══ SOUND ══ */
+  .sound-card { background:white;border:1px solid var(--pink-100);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-card); }
+  .sound-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
+  .sound-title { font-size:13px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px; }
+  .sound-toggle { width:38px;height:22px;border-radius:11px;border:none;background:var(--gray-200);cursor:pointer;position:relative;transition:background 0.25s;flex-shrink:0; }
+  .sound-toggle::after { content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,0.2);transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+  .sound-toggle.on { background:linear-gradient(135deg,var(--pink-300),var(--blue-300)); }
+  .sound-toggle.on::after { transform:translateX(16px); }
+  .sound-options { display:grid;grid-template-columns:repeat(3,1fr);gap:7px; }
+  .sound-opt { padding:10px 6px;border-radius:10px;border:1.5px solid var(--gray-200);background:white;cursor:pointer;text-align:center;transition:all 0.18s;-webkit-tap-highlight-color:transparent; }
+  .sound-opt:active { transform:scale(0.92); }
+  .sound-opt .s-icon { font-size:18px;display:block;margin-bottom:3px; }
+  .sound-opt .s-name { font-size:10px;color:var(--text-muted);font-weight:500; }
+  .sound-opt.active { border-color:var(--pink-300);background:var(--pink-50); }
+  .sound-opt.active .s-name { color:var(--pink-500); }
+  .sound-vol { display:flex;align-items:center;gap:8px;margin-top:10px; }
+  .sound-vol label { font-size:11px;color:var(--text-muted);white-space:nowrap; }
+  .sound-vol input[type=range] { flex:1;-webkit-appearance:none;height:4px;border-radius:2px;background:var(--pink-100);outline:none;cursor:pointer; }
+  .sound-vol input[type=range]::-webkit-slider-thumb { -webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,var(--pink-300),var(--blue-300));cursor:pointer;box-shadow:0 1px 4px rgba(212,83,126,0.3); }
+  .sound-vol .vol-val { font-size:11px;color:var(--pink-400);font-weight:600;min-width:30px; }
+  .btn-test-sound { width:100%;margin-top:10px;padding:9px;border-radius:var(--radius-pill);border:1.5px solid var(--pink-200);background:white;color:var(--pink-500);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px; }
+  .btn-test-sound:hover { background:var(--pink-50); }
+  .btn-test-sound:active { transform:scale(0.97); }
 
-  /* ══ SOUND CARD ══ */
-  .sound-card { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-card); }
-  .sound-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .sound-title { font-size: 13px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  /* ══ WATER ══ */
+  .water-card { background:white;border:1px solid var(--blue-100);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-card); }
+  .water-header { display:flex;align-items:center;justify-content:space-between;margin-bottom:12px; }
+  .water-title { font-size:13px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:6px; }
+  .water-count { font-size:12px;color:var(--blue-400);font-weight:600; }
+  .water-glasses { display:flex;gap:6px;flex-wrap:wrap; }
+  .glass-btn { width:34px;height:38px;border:1.5px solid var(--blue-200);border-radius:6px 6px 8px 8px;background:white;cursor:pointer;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:15px;transition:all 0.2s;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent; }
+  .glass-btn::before { content:'';position:absolute;bottom:0;left:0;right:0;height:0%;background:linear-gradient(to top,var(--blue-200),var(--blue-100));transition:height 0.35s cubic-bezier(0.34,1.56,0.64,1);border-radius:0 0 6px 6px; }
+  .glass-btn.filled::before { height:70%; }
+  .glass-btn.filled { border-color:var(--blue-300); }
+  .glass-btn:active { transform:scale(0.88); }
+  .glass-icon { position:relative;z-index:1;font-size:14px; }
 
-  .sound-toggle { width: 38px; height: 22px; border-radius: 11px; border: none; background: var(--gray-200); cursor: pointer; position: relative; transition: background 0.25s; flex-shrink: 0; }
-  .sound-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
-  .sound-toggle.on { background: linear-gradient(135deg, var(--pink-300), var(--blue-300)); }
-  .sound-toggle.on::after { transform: translateX(16px); }
-
-  .sound-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
-
-  .sound-opt { padding: 10px 6px; border-radius: 10px; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; text-align: center; transition: all 0.18s; -webkit-tap-highlight-color: transparent; }
-  .sound-opt:active { transform: scale(0.92); }
-  .sound-opt .s-icon { font-size: 18px; display: block; margin-bottom: 3px; }
-  .sound-opt .s-name { font-size: 10px; color: var(--text-muted); font-weight: 500; }
-  .sound-opt.active { border-color: var(--pink-300); background: var(--pink-50); }
-  .sound-opt.active .s-name { color: var(--pink-500); }
-
-  .sound-vol { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-  .sound-vol label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
-  .sound-vol input[type=range] { flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: var(--pink-100); outline: none; cursor: pointer; }
-  .sound-vol input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(135deg, var(--pink-300), var(--blue-300)); cursor: pointer; box-shadow: 0 1px 4px rgba(212,83,126,0.3); }
-  .sound-vol .vol-val { font-size: 11px; color: var(--pink-400); font-weight: 600; min-width: 30px; }
-
-  .btn-test-sound { width: 100%; margin-top: 10px; padding: 9px; border-radius: var(--radius-pill); border: 1.5px solid var(--pink-200); background: white; color: var(--pink-500); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .btn-test-sound:hover { background: var(--pink-50); }
-  .btn-test-sound:active { transform: scale(0.97); }
-
-  /* ══ WATER CARD ══ */
-  .water-card { background: white; border: 1px solid var(--blue-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-card); }
-  .water-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .water-title { font-size: 13px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 6px; }
-  .water-count { font-size: 12px; color: var(--blue-400); font-weight: 600; }
-  .water-glasses { display: flex; gap: 6px; flex-wrap: wrap; }
-
-  .glass-btn { width: 34px; height: 38px; border: 1.5px solid var(--blue-200); border-radius: 6px 6px 8px 8px; background: white; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; font-size: 15px; transition: all 0.2s; position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-  .glass-btn::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 0%; background: linear-gradient(to top, var(--blue-200), var(--blue-100)); transition: height 0.35s cubic-bezier(0.34,1.56,0.64,1); border-radius: 0 0 6px 6px; }
-  .glass-btn.filled::before { height: 70%; }
-  .glass-btn.filled { border-color: var(--blue-300); }
-  .glass-btn:active { transform: scale(0.88); }
-  .glass-icon { position: relative; z-index: 1; font-size: 14px; }
-
-  /* ══ MOOD CARD ══ */
-  .mood-card { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; box-shadow: var(--shadow-card); }
-  .mood-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-  .mood-row { display: flex; gap: 8px; justify-content: center; }
-  .mood-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--gray-200); background: white; cursor: pointer; font-size: 22px; display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1); -webkit-tap-highlight-color: transparent; line-height: 1; }
-  .mood-btn:hover { transform: scale(1.15); }
-  .mood-btn:active { transform: scale(0.95); }
-  .mood-btn.selected { border-color: var(--pink-300); background: var(--pink-50); transform: scale(1.2); box-shadow: 0 4px 12px rgba(212,83,126,0.2); }
-  .mood-label { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 6px; min-height: 16px; transition: all 0.2s; }
+  /* ══ MOOD ══ */
+  .mood-card { background:white;border:1px solid var(--pink-100);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow-card); }
+  .mood-title { font-size:13px;font-weight:500;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px; }
+  .mood-row { display:flex;gap:8px;justify-content:center; }
+  .mood-btn { width:44px;height:44px;border-radius:50%;border:2px solid var(--gray-200);background:white;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);-webkit-tap-highlight-color:transparent;line-height:1; }
+  .mood-btn:hover { transform:scale(1.15); }
+  .mood-btn:active { transform:scale(0.95); }
+  .mood-btn.selected { border-color:var(--pink-300);background:var(--pink-50);transform:scale(1.2);box-shadow:0 4px 12px rgba(212,83,126,0.2); }
+  .mood-label { font-size:11px;color:var(--text-muted);text-align:center;margin-top:6px;min-height:16px;transition:all 0.2s; }
 
   /* ══ HEADER ══ */
-  .app-header { background: white; border-bottom: 1px solid var(--pink-100); padding: 20px 20px 16px; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 12px rgba(212,83,126,0.07); }
-  .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .app-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--pink-500); }
-  .date-chip { background: var(--pink-50); border: 1px solid var(--pink-100); border-radius: var(--radius-pill); padding: 5px 14px; font-size: 12px; color: var(--pink-400); font-weight: 500; }
-  .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-  .progress-meta .prog-pct { font-weight: 600; color: var(--pink-400); }
-  .progress-track { background: var(--pink-50); border-radius: 99px; height: 6px; overflow: hidden; border: 1px solid var(--pink-100); }
-  .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--pink-300), var(--blue-300)); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
-  .motivasi-text { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 18px; }
+  .app-header { background:white;border-bottom:1px solid var(--pink-100);padding:20px 20px 16px;position:sticky;top:0;z-index:50;box-shadow:0 1px 12px rgba(212,83,126,0.07); }
+  .header-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:14px; }
+  .app-title { font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--pink-500); }
+  .date-chip { background:var(--pink-50);border:1px solid var(--pink-100);border-radius:var(--radius-pill);padding:5px 14px;font-size:12px;color:var(--pink-400);font-weight:500; }
+  .progress-meta { display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px; }
+  .progress-meta .prog-pct { font-weight:600;color:var(--pink-400); }
+  .progress-track { background:var(--pink-50);border-radius:99px;height:6px;overflow:hidden;border:1px solid var(--pink-100); }
+  .progress-fill { height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pink-300),var(--blue-300));transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  .motivasi-text { font-size:12px;color:var(--text-muted);margin-top:6px;min-height:18px; }
 
-  .main { max-width: 480px; margin: 0 auto; padding: 16px 16px 120px; position: relative; z-index: 1; }
+  .main { max-width:480px;margin:0 auto;padding:16px 16px 120px;position:relative;z-index:1; }
 
   /* ══ TASKS ══ */
-  .section { margin-bottom: 8px; }
-  .section-header { display: flex; align-items: center; gap: 8px; padding: 14px 4px 8px; }
-  .section-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .section-dot.pink { background: var(--pink-300); }
-  .section-dot.blue { background: var(--blue-300); }
-  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); }
-  .section-count { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+  .section { margin-bottom:8px; }
+  .section-header { display:flex;align-items:center;gap:8px;padding:14px 4px 8px; }
+  .section-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+  .section-dot.pink { background:var(--pink-300); }
+  .section-dot.blue { background:var(--blue-300); }
+  .section-label { font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted); }
+  .section-count { margin-left:auto;font-size:11px;color:var(--text-muted); }
+  .task-card { display:flex;align-items:center;gap:12px;background:white;border:1px solid var(--gray-200);border-radius:var(--radius);padding:13px 14px;margin-bottom:7px;cursor:pointer;transition:border-color 0.2s,background 0.2s,transform 0.15s;box-shadow:var(--shadow-card);-webkit-tap-highlight-color:transparent; }
+  .task-card:active { transform:scale(0.98); }
+  .task-card:hover { border-color:var(--pink-200); }
+  .task-card.done { background:linear-gradient(135deg,rgba(253,240,245,0.6),rgba(238,245,252,0.6));border-color:var(--blue-100); }
+  .task-card.done .task-name { text-decoration:line-through;color:var(--text-muted); }
+  .check-btn { width:24px;height:24px;border-radius:50%;border:1.5px solid var(--gray-200);background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.25s;position:relative; }
+  .task-card.done .check-btn { background:linear-gradient(135deg,var(--pink-300),var(--blue-300));border-color:transparent; }
+  .check-btn::after { content:'';width:5px;height:9px;border:2px solid white;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);opacity:0;transition:opacity 0.2s; }
+  .task-card.done .check-btn::after { opacity:1; }
+  .task-icon { width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0; }
+  .task-icon.pink { background:var(--pink-50); }
+  .task-icon.blue { background:var(--blue-50); }
+  .task-body { flex:1;min-width:0; }
+  .task-name { font-size:14px;font-weight:400;color:var(--text);line-height:1.3; }
+  .task-sub  { font-size:11px;color:var(--text-muted);margin-top:2px; }
 
-  .task-card { display: flex; align-items: center; gap: 12px; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 13px 14px; margin-bottom: 7px; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; box-shadow: var(--shadow-card); -webkit-tap-highlight-color: transparent; }
-  .task-card:active { transform: scale(0.98); }
-  .task-card:hover { border-color: var(--pink-200); }
-  .task-card.done { background: linear-gradient(135deg, rgba(253,240,245,0.6), rgba(238,245,252,0.6)); border-color: var(--blue-100); }
-  .task-card.done .task-name { text-decoration: line-through; color: var(--text-muted); }
-
-  .check-btn { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--gray-200); background: white; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.25s; position: relative; }
-  .task-card.done .check-btn { background: linear-gradient(135deg, var(--pink-300), var(--blue-300)); border-color: transparent; }
-  .check-btn::after { content: ''; width: 5px; height: 9px; border: 2px solid white; border-top: none; border-left: none; transform: rotate(45deg) translate(-1px, -1px); opacity: 0; transition: opacity 0.2s; }
-  .task-card.done .check-btn::after { opacity: 1; }
-
-  .task-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .task-icon.pink { background: var(--pink-50); }
-  .task-icon.blue { background: var(--blue-50); }
-  .task-body { flex: 1; min-width: 0; }
-  .task-name { font-size: 14px; font-weight: 400; color: var(--text); line-height: 1.3; }
-  .task-sub  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-
-  /* ══ NOTIF PANEL ══ */
-  .notif-panel { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 16px; margin-top: 8px; box-shadow: var(--shadow-soft); }
-  .notif-panel-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .notif-schedule { list-style: none; margin-bottom: 14px; }
-  .notif-schedule li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--gray-100); font-size: 13px; color: var(--text-muted); }
-  .notif-schedule li:last-child { border-bottom: none; }
-  .notif-time { font-weight: 600; color: var(--pink-400); min-width: 44px; font-size: 12px; }
-
-  .auto-reset-badge { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--pink-50), var(--blue-50)); border: 1px solid var(--pink-100); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 14px; font-size: 12px; color: var(--pink-500); }
-  .auto-reset-badge span.label { font-weight: 500; }
-  .auto-reset-badge span.sub { color: var(--text-muted); font-size: 11px; margin-left: auto; }
-
-  .btn-notif { width: 100%; padding: 13px; border-radius: var(--radius-pill); border: 1.5px solid var(--pink-200); background: white; color: var(--pink-500); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
-  .btn-notif:hover { background: var(--pink-50); }
-  .btn-notif.active { background: linear-gradient(135deg, var(--pink-100), var(--blue-100)); border-color: var(--blue-200); color: var(--blue-600); }
-  .btn-reset { width: 100%; margin-top: 10px; padding: 11px; border-radius: var(--radius-pill); border: 1px solid var(--gray-200); background: white; color: var(--gray-400); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
-  .btn-reset:hover { border-color: var(--pink-200); color: var(--pink-400); }
-  .countdown-text { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px; min-height: 16px; }
+  /* ══ NOTIF ══ */
+  .notif-panel { background:white;border:1px solid var(--pink-100);border-radius:var(--radius);padding:16px;margin-top:8px;box-shadow:var(--shadow-soft); }
+  .notif-panel-title { font-size:14px;font-weight:500;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px; }
+  .notif-schedule { list-style:none;margin-bottom:14px; }
+  .notif-schedule li { display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--gray-100);font-size:13px;color:var(--text-muted); }
+  .notif-schedule li:last-child { border-bottom:none; }
+  .notif-time { font-weight:600;color:var(--pink-400);min-width:44px;font-size:12px; }
+  .auto-reset-badge { display:flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--pink-50),var(--blue-50));border:1px solid var(--pink-100);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;font-size:12px;color:var(--pink-500); }
+  .auto-reset-badge span.label { font-weight:500; }
+  .auto-reset-badge span.sub { color:var(--text-muted);font-size:11px;margin-left:auto; }
+  .btn-notif { width:100%;padding:13px;border-radius:var(--radius-pill);border:1.5px solid var(--pink-200);background:white;color:var(--pink-500);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s; }
+  .btn-notif:hover { background:var(--pink-50); }
+  .btn-notif.active { background:linear-gradient(135deg,var(--pink-100),var(--blue-100));border-color:var(--blue-200);color:var(--blue-600); }
+  .btn-reset { width:100%;margin-top:10px;padding:11px;border-radius:var(--radius-pill);border:1px solid var(--gray-200);background:white;color:var(--gray-400);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s; }
+  .btn-reset:hover { border-color:var(--pink-200);color:var(--pink-400); }
+  .countdown-text { font-size:11px;color:var(--text-muted);text-align:center;margin-top:8px;min-height:16px; }
 
   /* ══ ALL DONE + TOAST ══ */
-  .all-done-banner { background: linear-gradient(135deg, var(--pink-50), var(--blue-50)); border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 20px; text-align: center; margin-bottom: 16px; display: none; }
-  .all-done-banner.show { display: block; animation: toastIn 0.4s ease; }
-  .all-done-banner .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
-  .all-done-banner h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--pink-500); margin-bottom: 4px; }
-  .all-done-banner p { font-size: 13px; color: var(--text-muted); }
+  .all-done-banner { background:linear-gradient(135deg,var(--pink-50),var(--blue-50));border:1px solid var(--pink-100);border-radius:var(--radius);padding:20px;text-align:center;margin-bottom:16px;display:none; }
+  .all-done-banner.show { display:block;animation:toastIn 0.4s ease; }
+  .all-done-banner .emoji { font-size:32px;display:block;margin-bottom:8px; }
+  .all-done-banner h3 { font-family:'Playfair Display',serif;font-size:18px;color:var(--pink-500);margin-bottom:4px; }
+  .all-done-banner p { font-size:13px;color:var(--text-muted); }
+  .toast-container { position:fixed;bottom:80px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none;z-index:999; }
+  .toast { background:white;border:1px solid var(--pink-100);border-radius:var(--radius-pill);padding:10px 20px;font-size:13px;font-weight:500;color:var(--pink-500);box-shadow:0 4px 20px rgba(212,83,126,0.15);animation:toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;pointer-events:none; }
+  .toast.out { animation:toastOut 0.25s ease forwards; }
+  @keyframes toastIn { from{opacity:0;transform:translateY(16px) scale(0.92)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(8px)} }
 
-  .toast-container { position: fixed; bottom: 24px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; z-index: 999; }
-  .toast { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius-pill); padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--pink-500); box-shadow: 0 4px 20px rgba(212,83,126,0.15); animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; pointer-events: none; }
-  .toast.out { animation: toastOut 0.25s ease forwards; }
-  @keyframes toastIn { from { opacity:0; transform: translateY(16px) scale(0.92); } to { opacity:1; transform: translateY(0) scale(1); } }
-  @keyframes toastOut { from { opacity:1; } to { opacity:0; transform: translateY(8px); } }
+  /* ══ AVATAR PAGE ══ */
+  .avatar-page { max-width:480px;margin:0 auto;padding:16px 16px 120px;position:relative;z-index:1; }
+  .avatar-page-header { background:white;border-bottom:1px solid var(--pink-100);padding:20px 20px 14px;position:sticky;top:0;z-index:50;box-shadow:0 1px 12px rgba(212,83,126,0.07);max-width:480px;margin:0 auto; }
+  .avatar-page-title { font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:var(--pink-500); }
+  .avatar-page-sub { font-size:12px;color:var(--text-muted);margin-top:2px; }
+  .avatar-stage { background:white;border:1px solid var(--pink-100);border-radius:20px;padding:20px;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;box-shadow:var(--shadow-soft); }
+  .avatar-name-input { border:1.5px solid var(--pink-200);border-radius:50px;padding:7px 16px;font-size:13px;font-family:inherit;color:var(--pink-500);text-align:center;outline:none;width:180px;background:var(--pink-50); }
+  .avatar-name-input:focus { border-color:var(--pink-400); }
+  .save-avatar-btn { margin-top:10px;padding:10px 28px;border-radius:50px;border:none;background:linear-gradient(135deg,#ea7dae,#6ba8e8);color:white;font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;transition:transform 0.15s;box-shadow:0 4px 14px rgba(212,83,126,0.25); }
+  .save-avatar-btn:active { transform:scale(0.96); }
+  .saved-tag { font-size:11px;color:var(--blue-400);margin-top:6px;opacity:0;transition:opacity 0.3s;text-align:center;min-height:16px; }
+  .saved-tag.show { opacity:1; }
+  .av-panel { background:white;border:1px solid var(--pink-100);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;box-shadow:var(--shadow-card); }
+  .av-panel-title { font-size:11px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px; }
+  .av-tabs { display:flex;gap:6px;margin-bottom:10px; }
+  .av-tab { flex:1;padding:9px 6px;border-radius:50px;border:1.5px solid var(--gray-200);background:white;font-size:11px;cursor:pointer;font-family:inherit;color:var(--text-muted);transition:all 0.18s;text-align:center;font-weight:500; }
+  .av-tab.active { border-color:var(--pink-300);background:linear-gradient(135deg,var(--pink-50),var(--blue-50));color:var(--pink-500); }
+  .av-section { display:none; }
+  .av-section.active { display:block; }
+  .swatch-row { display:flex;flex-wrap:wrap;gap:7px; }
+  .swatch { width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.18s;flex-shrink:0; }
+  .swatch.active { border-color:var(--pink-400);transform:scale(1.18);box-shadow:0 0 0 2px white,0 0 0 4px var(--pink-400); }
+  .opt-row { display:flex;gap:7px;flex-wrap:wrap; }
+  .opt-btn { padding:7px 13px;border-radius:50px;border:1.5px solid var(--gray-200);background:white;font-size:12px;cursor:pointer;transition:all 0.18s;font-family:inherit;color:var(--text);white-space:nowrap; }
+  .opt-btn:active { transform:scale(0.93); }
+  .opt-btn.active { border-color:var(--pink-300);background:var(--pink-50);color:var(--pink-500);font-weight:500; }
+  .av-sub-title { font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text-muted);margin-top:12px;margin-bottom:8px; }
 </style>
 </head>
 <body>
 
+<!-- SPLASH -->
 <div id="splash">
   <div class="splash-panel top"></div>
   <div class="splash-panel bottom"></div>
@@ -343,140 +282,211 @@
 
 <div id="flower-canvas"></div>
 
-<header class="app-header" style="max-width:480px;margin:0 auto;">
-  <div class="header-top">
-    <div class="app-title">Rutinku 🌸</div>
-    <div class="date-chip" id="date-chip">—</div>
-  </div>
-  <div class="progress-wrap">
-    <div class="progress-meta">
-      <span id="prog-label">0 dari 16 selesai</span>
-      <span class="prog-pct" id="prog-pct">0%</span>
+<!-- ══ PAGE: RUTINKU ══ -->
+<div class="page active" id="page-rutinku">
+  <header class="app-header" style="max-width:480px;margin:0 auto;">
+    <div class="header-top">
+      <div class="app-title">Rutinku 🌸</div>
+      <div class="date-chip" id="date-chip">—</div>
     </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="prog-fill" style="width:0%"></div>
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="prog-label">0 dari 16 selesai</span>
+        <span class="prog-pct" id="prog-pct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="motivasi-text" id="motivasi">Yuk mulai harimu! ✨</div>
     </div>
-    <div class="motivasi-text" id="motivasi">Yuk mulai harimu! ✨</div>
-  </div>
-</header>
+  </header>
 
-<main class="main">
-  <div class="welcome-dyy">
-    <div class="float-emoji">✨</div>
-    <h2>Semangat Cantik, Dyy!</h2>
-    <p>Consistency is the key to your glow up 🌸</p>
-    <div class="beauty-rules">
-      <span class="badge">Golden Rules</span>
-      🚫 No Sugar &nbsp;•&nbsp; 🚫 No Junkfood
+  <main class="main">
+    <div class="welcome-dyy">
+      <div class="float-emoji">✨</div>
+      <h2>Semangat Cantik, Dyy!</h2>
+      <p>Consistency is the key to your glow up 🌸</p>
+      <div class="beauty-rules">
+        <span class="badge">Golden Rules</span>
+        🚫 No Sugar &nbsp;•&nbsp; 🚫 No Junkfood
+      </div>
     </div>
+
+    <div class="streak-card">
+      <div class="streak-flame">🔥</div>
+      <div class="streak-body">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label">Hari berturut-turut selesai semua!</div>
+      </div>
+      <div class="streak-best" id="streak-best">Rekor: 0 hari</div>
+    </div>
+
+    <div class="sound-card">
+      <div class="sound-header">
+        <div class="sound-title">🎵 Suara Interaksi</div>
+        <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()"></button>
+      </div>
+      <div class="sound-options" id="sound-options"></div>
+      <div class="sound-vol">
+        <label>Volume</label>
+        <input type="range" id="vol-slider" min="0" max="100" value="60" oninput="updateVolume(this.value)">
+        <span class="vol-val" id="vol-val">60%</span>
+      </div>
+      <button class="btn-test-sound" onclick="testCurrentSound()">▶ Preview suara</button>
+    </div>
+
+    <div class="water-card">
+      <div class="water-header">
+        <div class="water-title">💧 Minum Air Hari Ini</div>
+        <div class="water-count" id="water-count">0 / 8 gelas</div>
+      </div>
+      <div class="water-glasses" id="water-glasses"></div>
+    </div>
+
+    <div class="mood-card">
+      <div class="mood-title">🌈 Mood kamu hari ini?</div>
+      <div class="mood-row" id="mood-row"></div>
+      <div class="mood-label" id="mood-label"></div>
+    </div>
+
+    <div class="all-done-banner" id="all-done">
+      <span class="emoji">🌺</span>
+      <h3>Semua selesai!</h3>
+      <p>Kamu luar biasa hari ini, Dyy. Selamat beristirahat 💕</p>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-dot pink"></div>
+        <span class="section-label">Pagi</span>
+        <span class="section-count" id="count-pagi">0/8</span>
+      </div>
+      <div id="group-pagi"></div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-dot blue"></div>
+        <span class="section-label">Siang</span>
+        <span class="section-count" id="count-siang">0/2</span>
+      </div>
+      <div id="group-siang"></div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <div class="section-dot pink"></div>
+        <span class="section-label">Malam</span>
+        <span class="section-count" id="count-malam">0/6</span>
+      </div>
+      <div id="group-malam"></div>
+    </div>
+
+    <div class="notif-panel">
+      <div class="notif-panel-title">🔔 Pengingat Otomatis</div>
+      <div class="auto-reset-badge">
+        <span>🌙</span>
+        <span class="label">Reset otomatis setiap tengah malam WIB</span>
+        <span class="sub" id="countdown-badge">—</span>
+      </div>
+      <ul class="notif-schedule">
+        <li><span class="notif-time">05.30</span> Waktunya bangun & minum air!</li>
+        <li><span class="notif-time">06.00</span> Cuci muka, sikat gigi, sarapan</li>
+        <li><span class="notif-time">07.00</span> Jangan lupa minum collagen!</li>
+        <li><span class="notif-time">07.30</span> Ayo olahraga sebentar! 💪</li>
+        <li><span class="notif-time">08.30</span> Scrub, mandi, skincare pagi</li>
+        <li><span class="notif-time">12.00</span> Waktunya makan siang & istirahat</li>
+        <li><span class="notif-time">19.00</span> Mandi malam & vitamin rambut</li>
+        <li><span class="notif-time">20.00</span> Skincare & bodycare malam</li>
+        <li><span class="notif-time">21.00</span> Minum kitfee & natur-E</li>
+        <li><span class="notif-time">22.00</span> Sikat gigi & bersiap bobo 🌙</li>
+      </ul>
+      <button class="btn-notif" id="btn-notif" onclick="toggleNotif()">
+        <span id="notif-icon">🔔</span>
+        <span id="notif-label">Aktifkan Notifikasi</span>
+      </button>
+      <div id="notif-status" style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:8px;min-height:16px;"></div>
+      <button class="btn-reset" onclick="resetAll()">🔄 Reset progress hari ini</button>
+      <div class="countdown-text" id="countdown-text"></div>
+    </div>
+  </main>
+</div>
+
+<!-- ══ PAGE: AVATAR ══ -->
+<div class="page" id="page-avatar">
+  <div class="avatar-page-header">
+    <div class="avatar-page-title">My Avatar 💖</div>
+    <div class="avatar-page-sub">Kustom karakter cantikmu sendiri!</div>
   </div>
 
-  <div class="streak-card">
-    <div class="streak-flame">🔥</div>
-    <div class="streak-body">
-      <div class="streak-num" id="streak-num">0</div>
-      <div class="streak-label">Hari berturut-turut selesai semua!</div>
+  <div class="avatar-page">
+    <div class="avatar-stage">
+      <svg id="avatar-svg" width="200" height="270" viewBox="0 0 200 270" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:12px"></svg>
+      <input class="avatar-name-input" id="avatar-name" type="text" maxlength="20" placeholder="Nama karaktermu..." value="Dyy">
+      <button class="save-avatar-btn" onclick="saveAvatar()">💾 Simpan Avatar</button>
+      <div class="saved-tag" id="saved-tag">✅ Avatar tersimpan!</div>
     </div>
-    <div class="streak-best" id="streak-best">Rekor: 0 hari</div>
-  </div>
 
-  <!-- SOUND PICKER -->
-  <div class="sound-card">
-    <div class="sound-header">
-      <div class="sound-title">🎵 Suara Interaksi</div>
-      <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()"></button>
+    <div class="av-tabs">
+      <button class="av-tab active" onclick="switchAvTab('skin',this)">🧖 Kulit</button>
+      <button class="av-tab" onclick="switchAvTab('hair',this)">💇 Rambut</button>
+      <button class="av-tab" onclick="switchAvTab('outfit',this)">👗 Outfit</button>
+      <button class="av-tab" onclick="switchAvTab('acc',this)">✨ Aksesori</button>
     </div>
-    <div class="sound-options" id="sound-options"></div>
-    <div class="sound-vol">
-      <label>Volume</label>
-      <input type="range" id="vol-slider" min="0" max="100" value="60" oninput="updateVolume(this.value)">
-      <span class="vol-val" id="vol-val">60%</span>
-    </div>
-    <button class="btn-test-sound" onclick="testCurrentSound()">▶ Preview suara</button>
-  </div>
 
-  <div class="water-card">
-    <div class="water-header">
-      <div class="water-title">💧 Minum Air Hari Ini</div>
-      <div class="water-count" id="water-count">0 / 8 gelas</div>
+    <div class="av-panel">
+      <div class="av-section active" id="av-skin">
+        <div class="av-panel-title">🌸 Warna Kulit</div>
+        <div class="swatch-row" id="skin-swatches"></div>
+      </div>
+      <div class="av-section" id="av-hair">
+        <div class="av-panel-title">💇 Gaya Rambut</div>
+        <div class="opt-row" id="hair-style-opts"></div>
+        <div class="av-sub-title">🎨 Warna Rambut</div>
+        <div class="swatch-row" id="hair-color-swatches"></div>
+      </div>
+      <div class="av-section" id="av-outfit">
+        <div class="av-panel-title">👗 Model Outfit</div>
+        <div class="opt-row" id="outfit-opts"></div>
+        <div class="av-sub-title">🎨 Warna Outfit</div>
+        <div class="swatch-row" id="outfit-color-swatches"></div>
+      </div>
+      <div class="av-section" id="av-acc">
+        <div class="av-panel-title">✨ Aksesori Kepala</div>
+        <div class="opt-row" id="acc-opts"></div>
+        <div class="av-sub-title">😊 Ekspresi</div>
+        <div class="opt-row" id="expr-opts"></div>
+        <div class="av-sub-title">💄 Lipstik</div>
+        <div class="swatch-row" id="lip-swatches"></div>
+        <div class="av-sub-title">💅 Cat Kuku</div>
+        <div class="swatch-row" id="nail-swatches"></div>
+      </div>
     </div>
-    <div class="water-glasses" id="water-glasses"></div>
   </div>
+</div>
 
-  <div class="mood-card">
-    <div class="mood-title">🌈 Mood kamu hari ini?</div>
-    <div class="mood-row" id="mood-row"></div>
-    <div class="mood-label" id="mood-label"></div>
-  </div>
-
-  <div class="all-done-banner" id="all-done">
-    <span class="emoji">🌺</span>
-    <h3>Semua selesai!</h3>
-    <p>Kamu luar biasa hari ini, Dyy. Selamat beristirahat 💕</p>
-  </div>
-
-  <div class="section">
-    <div class="section-header">
-      <div class="section-dot pink"></div>
-      <span class="section-label">Pagi</span>
-      <span class="section-count" id="count-pagi">0/8</span>
-    </div>
-    <div id="group-pagi"></div>
-  </div>
-  <div class="section">
-    <div class="section-header">
-      <div class="section-dot blue"></div>
-      <span class="section-label">Siang</span>
-      <span class="section-count" id="count-siang">0/2</span>
-    </div>
-    <div id="group-siang"></div>
-  </div>
-  <div class="section">
-    <div class="section-header">
-      <div class="section-dot pink"></div>
-      <span class="section-label">Malam</span>
-      <span class="section-count" id="count-malam">0/6</span>
-    </div>
-    <div id="group-malam"></div>
-  </div>
-
-  <div class="notif-panel">
-    <div class="notif-panel-title">🔔 Pengingat Otomatis</div>
-    <div class="auto-reset-badge">
-      <span>🌙</span>
-      <span class="label">Reset otomatis setiap tengah malam WIB</span>
-      <span class="sub" id="countdown-badge">—</span>
-    </div>
-    <ul class="notif-schedule">
-      <li><span class="notif-time">05.30</span> Waktunya bangun & minum air!</li>
-      <li><span class="notif-time">06.00</span> Cuci muka, sikat gigi, sarapan</li>
-      <li><span class="notif-time">07.00</span> Jangan lupa minum collagen!</li>
-      <li><span class="notif-time">07.30</span> Ayo olahraga sebentar! 💪</li>
-      <li><span class="notif-time">08.30</span> Scrub, mandi, skincare pagi</li>
-      <li><span class="notif-time">12.00</span> Waktunya makan siang & istirahat</li>
-      <li><span class="notif-time">19.00</span> Mandi malam & vitamin rambut</li>
-      <li><span class="notif-time">20.00</span> Skincare & bodycare malam</li>
-      <li><span class="notif-time">21.00</span> Minum kitfee & natur-E</li>
-      <li><span class="notif-time">22.00</span> Sikat gigi & bersiap bobo 🌙</li>
-    </ul>
-    <button class="btn-notif" id="btn-notif" onclick="toggleNotif()">
-      <span id="notif-icon">🔔</span>
-      <span id="notif-label">Aktifkan Notifikasi</span>
-    </button>
-    <div id="notif-status" style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:8px;min-height:16px;"></div>
-    <button class="btn-reset" onclick="resetAll()">🔄 Reset progress hari ini</button>
-    <div class="countdown-text" id="countdown-text"></div>
-  </div>
-</main>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-rutinku" onclick="switchPage('rutinku')">
+    <span class="nav-icon">🌸</span>Rutinku
+  </button>
+  <button class="nav-btn" id="nav-avatar" onclick="switchPage('avatar')">
+    <span class="nav-icon">💖</span>Avatar
+  </button>
+</nav>
 
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-// ── STORAGE KEYS ──
-const SK = { DONE:'rutinku_done', DATE:'rutinku_date', NOTIF:'rutinku_notif', FIRED:'rutinku_fired', WATER:'rutinku_water', MOOD:'rutinku_mood', STREAK:'rutinku_streak', BEST:'rutinku_best', LASTWIN:'rutinku_lastwin', SOUND:'rutinku_sound', VOL:'rutinku_vol', SOUNDON:'rutinku_soundon' };
+// ══ STORAGE KEYS ══
+const SK={DONE:'rutinku_done',DATE:'rutinku_date',NOTIF:'rutinku_notif',FIRED:'rutinku_fired',WATER:'rutinku_water',MOOD:'rutinku_mood',STREAK:'rutinku_streak',BEST:'rutinku_best',LASTWIN:'rutinku_lastwin',SOUND:'rutinku_sound',VOL:'rutinku_vol',SOUNDON:'rutinku_soundon',AVATAR:'rutinku_avatar'};
 
-// ── TASKS ──
-const TASKS = {
+// ══ PAGE SWITCH ══
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.getElementById('nav-'+p).classList.add('active');
+}
+
+// ══ TASKS ══
+const TASKS={
   pagi:[
     {id:'p0',icon:'💧',color:'pink',name:'Minum air putih',sub:'Segelas besar setelah bangun'},
     {id:'p1',icon:'🪥',color:'pink',name:'Cuci muka & sikat gigi',sub:'Bersih dan segar!'},
@@ -501,301 +511,138 @@ const TASKS = {
   ]
 };
 
-const MOTIVASI = ['Yuk mulai harimu, Dyy! ✨','Dyy hebat! Terus semangat! 🌸','Setengah jalan, Dyy keren! 💪','Dyy hampir selesai, ayo! 🌺','SEMPURNA! Dyy luar biasa! 🎉'];
-const NOTIF_SCHEDULE = [
+const MOTIVASI=['Yuk mulai harimu, Dyy! ✨','Dyy hebat! Terus semangat! 🌸','Setengah jalan, Dyy keren! 💪','Dyy hampir selesai, ayo! 🌺','SEMPURNA! Dyy luar biasa! 🎉'];
+const NOTIF_SCHEDULE=[
   {h:5,m:30,msg:'💧 Waktunya bangun & minum air putih!'},{h:6,m:0,msg:'🪥 Cuci muka, sikat gigi, dan sarapan ya!'},
   {h:7,m:0,msg:'✨ Jangan lupa minum collagen!'},{h:7,m:30,msg:'🏃 Ayo olahraga sebentar!'},
   {h:8,m:30,msg:'🚿 Saatnya scrub, mandi, & skincare pagi!'},{h:12,m:0,msg:'🍱 Waktunya makan siang & istirahat!'},
   {h:19,m:0,msg:'🛁 Jangan lupa mandi malam & vitamin rambut!'},{h:20,m:0,msg:'🌙 Skincare & bodycare malam yuk!'},
   {h:21,m:0,msg:'☕ Minum kitfee & natur-E dulu!'},{h:22,m:0,msg:'🪥 Sikat gigi & bersiap bobo ya!'},
 ];
-const MOODS = [{emoji:'😄',label:'Semangat banget!'},{emoji:'🙂',label:'Lumayan baik'},{emoji:'😐',label:'Biasa aja'},{emoji:'😔',label:'Lagi kurang mood'},{emoji:'😴',label:'Ngantuk banget'}];
-const SOUND_TYPES = [
-  {id:'pop',icon:'🫧',name:'Pop'},{id:'chime',icon:'🔔',name:'Chime'},
-  {id:'soft',icon:'🌊',name:'Soft'},{id:'click',icon:'🖱️',name:'Click'},
-  {id:'sparkle',icon:'✨',name:'Sparkle'},{id:'ding',icon:'🎵',name:'Ding'},
-];
+const MOODS=[{emoji:'😄',label:'Semangat banget!'},{emoji:'🙂',label:'Lumayan baik'},{emoji:'😐',label:'Biasa aja'},{emoji:'😔',label:'Lagi kurang mood'},{emoji:'😴',label:'Ngantuk banget'}];
+const SOUND_TYPES=[{id:'pop',icon:'🫧',name:'Pop'},{id:'chime',icon:'🔔',name:'Chime'},{id:'soft',icon:'🌊',name:'Soft'},{id:'click',icon:'🖱️',name:'Click'},{id:'sparkle',icon:'✨',name:'Sparkle'},{id:'ding',icon:'🎵',name:'Ding'}];
 
-// ── STATE ──
-let done=new Set(), notifOn=false, tickInterval=null, firedToday=new Set();
-let waterCount=0, moodToday=null, streak=0, bestStreak=0;
-let audioCtx=null, soundOn=true, currentSound='chime', volume=0.6;
+// ══ AVATAR DATA ══
+const SKIN_TONES=[{v:'#FFDBB4',n:'Putih Susu'},{v:'#F5C89A',n:'Ivory'},{v:'#E8A87C',n:'Warm'},{v:'#C98B58',n:'Tan'},{v:'#A06030',n:'Brown'},{v:'#7A4020',n:'Deep'}];
+const HAIR_COLORS=[{v:'#1a0a00',n:'Hitam'},{v:'#4a2c0a',n:'Coklat Tua'},{v:'#8B5E3C',n:'Coklat'},{v:'#c49a6c',n:'Honey'},{v:'#f5c842',n:'Blonde'},{v:'#e03c6b',n:'Pink'},{v:'#9b59b6',n:'Purple'},{v:'#3498db',n:'Blue'}];
+const OUTFIT_COLORS=[{v:'#ff85a1',n:'Pink'},{v:'#c084fc',n:'Purple'},{v:'#6ba8e8',n:'Blue'},{v:'#5DCAA5',n:'Teal'},{v:'#f5c842',n:'Yellow'},{v:'#f0997b',n:'Coral'},{v:'#ffffff',n:'White'},{v:'#2d2d2d',n:'Black'}];
+const LIP_COLORS=[{v:'#e03c6b',n:'Hot Pink'},{v:'#c0392b',n:'Red'},{v:'#f5a0b5',n:'Baby Pink'},{v:'#a0522d',n:'Nude'},{v:'#d4855a',n:'Peach'},{v:'#8e44ad',n:'Plum'}];
+const NAIL_COLORS=[{v:'#ff85a1',n:'Pink'},{v:'#e03c6b',n:'Hot Pink'},{v:'#c0392b',n:'Red'},{v:'#f5c842',n:'Yellow'},{v:'#ffffff',n:'White'},{v:'#3498db',n:'Blue'},{v:'#9b59b6',n:'Purple'},{v:'#2d2d2d',n:'Black'}];
+const HAIR_STYLES=[{id:'straight',n:'Lurus Panjang'},{id:'wavy',n:'Bergelombang'},{id:'curly',n:'Keriting'},{id:'bun',n:'Sanggul'},{id:'ponytail',n:'Kuncir'},{id:'short',n:'Pendek'}];
+const OUTFITS=[{id:'dress',n:'Gaun'},{id:'casual',n:'Casual'},{id:'sporty',n:'Sporty'},{id:'formal',n:'Formal'}];
+const ACCESSORIES=[{id:'none',n:'Tidak Ada'},{id:'crown',n:'Mahkota'},{id:'bow',n:'Pita'},{id:'glasses',n:'Kacamata'},{id:'earrings',n:'Anting'}];
+const EXPRESSIONS=[{id:'happy',n:'😊 Senang'},{id:'excited',n:'🤩 Excited'},{id:'shy',n:'🥺 Malu'},{id:'cool',n:'😎 Keren'},{id:'sad',n:'😢 Sedih'},{id:'wink',n:'😉 Wink'}];
+
+// ══ STATE ══
+let done=new Set(),notifOn=false,tickInterval=null,firedToday=new Set();
+let waterCount=0,moodToday=null,streak=0,bestStreak=0;
+let audioCtx=null,soundOn=true,currentSound='chime',volume=0.6;
 const TOTAL=16;
+let avState={skin:'#F5C89A',hairColor:'#1a0a00',hairStyle:'wavy',outfitColor:'#ff85a1',outfit:'dress',acc:'none',lipColor:'#e03c6b',nailColor:'#ff85a1',expr:'happy'};
 
-// ── WIB HELPERS ──
-function getWIBDate() {
-  const now=new Date(), d=(7*60+now.getTimezoneOffset())*60000;
-  return new Date(now.getTime()+d).toISOString().slice(0,10);
+// ══ WIB HELPERS ══
+function getWIBDate(){const now=new Date(),d=(7*60+now.getTimezoneOffset())*60000;return new Date(now.getTime()+d).toISOString().slice(0,10);}
+function getWIBNow(){const now=new Date(),d=(7*60+now.getTimezoneOffset())*60000;return new Date(now.getTime()+d);}
+
+// ══ AUDIO ══
+function getCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();return audioCtx;}
+function playSound(type,vol){
+  if(!soundOn)return;
+  const ctx=getCtx(),v=vol!==undefined?vol:volume,now=ctx.currentTime;
+  const mk=(freq,type2,start,dur,gainPeak,freqEnd)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type=type2||'sine';o.frequency.value=freq;if(freqEnd)o.frequency.exponentialRampToValueAtTime(freqEnd,start+dur);g.gain.setValueAtTime(0,start);g.gain.linearRampToValueAtTime(gainPeak,start+0.01);g.gain.exponentialRampToValueAtTime(0.001,start+dur);o.start(start);o.stop(start+dur+0.05);};
+  if(type==='pop'){mk(600,'sine',now,0.14,v*0.5,200);}
+  else if(type==='chime'){[523,659,784].forEach((f,i)=>mk(f,'sine',now+i*0.09,0.5,v*0.38));}
+  else if(type==='soft'){mk(440,'sine',now,0.4,v*0.32,480);}
+  else if(type==='click'){const buf=ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*Math.exp(-i/80);const src=ctx.createBufferSource();src.buffer=buf;const filt=ctx.createBiquadFilter();filt.type='highpass';filt.frequency.value=1200;const g=ctx.createGain();src.connect(filt);filt.connect(g);g.connect(ctx.destination);g.gain.setValueAtTime(v*0.9,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.06);src.start(now);src.stop(now+0.07);}
+  else if(type==='sparkle'){[880,1108,1318,1760].forEach((f,i)=>mk(f,'triangle',now+i*0.06,0.28,v*0.22));}
+  else if(type==='ding'){mk(1047,'sine',now,0.38,v*0.48,900);}
 }
-function getWIBNow() {
-  const now=new Date(), d=(7*60+now.getTimezoneOffset())*60000;
-  return new Date(now.getTime()+d);
-}
+function playUndoSound(){if(!soundOn)return;const ctx=getCtx(),now=ctx.currentTime;const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.setValueAtTime(480,now);o.frequency.exponentialRampToValueAtTime(280,now+0.18);g.gain.setValueAtTime(volume*0.3,now);g.gain.exponentialRampToValueAtTime(0.001,now+0.2);o.start(now);o.stop(now+0.22);}
+function playWaterSound(){if(!soundOn)return;const ctx=getCtx(),now=ctx.currentTime;[420,520,640].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;const t=now+i*0.055;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(volume*0.22,t+0.01);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);o.start(t);o.stop(t+0.22);});}
+function playAllDoneSound(){if(!soundOn)return;const ctx=getCtx(),now=ctx.currentTime;[523,659,784,1047].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type='sine';o.frequency.value=f;const t=now+i*0.13;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(volume*0.5,t+0.02);g.gain.exponentialRampToValueAtTime(0.001,t+0.65);o.start(t);o.stop(t+0.7);});}
 
-// ── AUDIO ──
-function getCtx() {
-  if (!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
-  if (audioCtx.state==='suspended') audioCtx.resume();
-  return audioCtx;
-}
-
-function playSound(type, vol) {
-  if (!soundOn) return;
-  const ctx=getCtx(), v=vol!==undefined?vol:volume, now=ctx.currentTime;
-
-  const mk=(freq,type2,start,dur,gainPeak,freqEnd)=>{
-    const o=ctx.createOscillator(), g=ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.type=type2||'sine'; o.frequency.value=freq;
-    if(freqEnd) o.frequency.exponentialRampToValueAtTime(freqEnd,start+dur);
-    g.gain.setValueAtTime(0,start);
-    g.gain.linearRampToValueAtTime(gainPeak,start+0.01);
-    g.gain.exponentialRampToValueAtTime(0.001,start+dur);
-    o.start(start); o.stop(start+dur+0.05);
-  };
-
-  if(type==='pop') { mk(600,'sine',now,0.14,v*0.5,200); }
-  else if(type==='chime') { [523,659,784].forEach((f,i)=>mk(f,'sine',now+i*0.09,0.5,v*0.38)); }
-  else if(type==='soft') { mk(440,'sine',now,0.4,v*0.32,480); }
-  else if(type==='click') {
-    const buf=ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);
-    const data=buf.getChannelData(0);
-    for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.exp(-i/80);
-    const src=ctx.createBufferSource(); src.buffer=buf;
-    const filt=ctx.createBiquadFilter(); filt.type='highpass'; filt.frequency.value=1200;
-    const g=ctx.createGain(); src.connect(filt); filt.connect(g); g.connect(ctx.destination);
-    g.gain.setValueAtTime(v*0.9,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.06);
-    src.start(now); src.stop(now+0.07);
-  }
-  else if(type==='sparkle') { [880,1108,1318,1760].forEach((f,i)=>mk(f,'triangle',now+i*0.06,0.28,v*0.22)); }
-  else if(type==='ding') { mk(1047,'sine',now,0.38,v*0.48,900); }
-}
-
-function playUndoSound() {
-  if(!soundOn) return;
-  const ctx=getCtx(), now=ctx.currentTime;
-  const o=ctx.createOscillator(), g=ctx.createGain();
-  o.connect(g); g.connect(ctx.destination);
-  o.type='sine'; o.frequency.setValueAtTime(480,now); o.frequency.exponentialRampToValueAtTime(280,now+0.18);
-  g.gain.setValueAtTime(volume*0.3,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.2);
-  o.start(now); o.stop(now+0.22);
-}
-
-function playWaterSound() {
-  if(!soundOn) return;
-  const ctx=getCtx(), now=ctx.currentTime;
-  [420,520,640].forEach((f,i)=>{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.type='sine'; o.frequency.value=f; const t=now+i*0.055;
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(volume*0.22,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.2);
-    o.start(t); o.stop(t+0.22);
-  });
-}
-
-function playAllDoneSound() {
-  if(!soundOn) return;
-  const ctx=getCtx(), now=ctx.currentTime;
-  [523,659,784,1047].forEach((f,i)=>{
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.connect(g); g.connect(ctx.destination);
-    o.type='sine'; o.frequency.value=f; const t=now+i*0.13;
-    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(volume*0.5,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+0.65);
-    o.start(t); o.stop(t+0.7);
-  });
-}
-
-function renderSoundOptions() {
-  const el=document.getElementById('sound-options');
-  el.innerHTML='';
-  SOUND_TYPES.forEach(s=>{
-    const btn=document.createElement('button');
-    btn.className='sound-opt'+(currentSound===s.id?' active':'');
-    btn.innerHTML=`<span class="s-icon">${s.icon}</span><span class="s-name">${s.name}</span>`;
-    btn.onclick=()=>selectSound(s.id);
-    el.appendChild(btn);
-  });
+function renderSoundOptions(){
+  const el=document.getElementById('sound-options');el.innerHTML='';
+  SOUND_TYPES.forEach(s=>{const btn=document.createElement('button');btn.className='sound-opt'+(currentSound===s.id?' active':'');btn.innerHTML=`<span class="s-icon">${s.icon}</span><span class="s-name">${s.name}</span>`;btn.onclick=()=>selectSound(s.id);el.appendChild(btn);});
   document.getElementById('sound-toggle').classList.toggle('on',soundOn);
 }
+function selectSound(id){currentSound=id;try{localStorage.setItem(SK.SOUND,id);}catch(e){}renderSoundOptions();playSound(id);}
+function toggleSound(){soundOn=!soundOn;document.getElementById('sound-toggle').classList.toggle('on',soundOn);try{localStorage.setItem(SK.SOUNDON,soundOn?'1':'0');}catch(e){}if(soundOn){showToast('🎵 Suara aktif');playSound(currentSound);}else showToast('🔇 Suara dimatikan');}
+function updateVolume(val){volume=val/100;document.getElementById('vol-val').textContent=val+'%';try{localStorage.setItem(SK.VOL,val);}catch(e){};}
+function testCurrentSound(){playSound(currentSound,volume);}
 
-function selectSound(id) {
-  currentSound=id;
-  try{localStorage.setItem(SK.SOUND,id);}catch(e){}
-  renderSoundOptions();
-  playSound(id);
+// ══ STORAGE ══
+function saveState(){
+  try{localStorage.setItem(SK.DONE,JSON.stringify([...done]));localStorage.setItem(SK.DATE,getWIBDate());localStorage.setItem(SK.FIRED,JSON.stringify([...firedToday]));localStorage.setItem(SK.WATER,String(waterCount));localStorage.setItem(SK.MOOD,moodToday!==null?String(moodToday):'');localStorage.setItem(SK.STREAK,String(streak));localStorage.setItem(SK.BEST,String(bestStreak));}catch(e){}
+}
+function loadState(){
+  try{
+    const savedDate=localStorage.getItem(SK.DATE),today=getWIBDate();
+    if(savedDate===today){const sd=localStorage.getItem(SK.DONE);if(sd)done=new Set(JSON.parse(sd));const sf=localStorage.getItem(SK.FIRED);if(sf)firedToday=new Set(JSON.parse(sf));waterCount=parseInt(localStorage.getItem(SK.WATER)||'0');const sm=localStorage.getItem(SK.MOOD);moodToday=(sm!==null&&sm!=='')?parseInt(sm):null;}
+    else{const lw=localStorage.getItem(SK.LASTWIN);const yd=new Date(getWIBNow());yd.setUTCDate(yd.getUTCDate()-1);streak=(lw===yd.toISOString().slice(0,10))?parseInt(localStorage.getItem(SK.STREAK)||'0'):0;done.clear();firedToday.clear();waterCount=0;moodToday=null;saveState();}
+    streak=parseInt(localStorage.getItem(SK.STREAK)||'0');bestStreak=parseInt(localStorage.getItem(SK.BEST)||'0');
+    const ss=localStorage.getItem(SK.SOUND);if(ss)currentSound=ss;
+    const sv=localStorage.getItem(SK.VOL);if(sv){volume=parseInt(sv)/100;document.getElementById('vol-slider').value=sv;document.getElementById('vol-val').textContent=sv+'%';}
+    const so=localStorage.getItem(SK.SOUNDON);if(so!==null)soundOn=so==='1';
+    const sn=localStorage.getItem(SK.NOTIF);if(sn==='true'&&'Notification'in window&&Notification.permission==='granted')startNotif(true);
+    const av=localStorage.getItem(SK.AVATAR);if(av)avState={...avState,...JSON.parse(av)};
+  }catch(e){}
 }
 
-function toggleSound() {
-  soundOn=!soundOn;
-  document.getElementById('sound-toggle').classList.toggle('on',soundOn);
-  try{localStorage.setItem(SK.SOUNDON,soundOn?'1':'0');}catch(e){}
-  if(soundOn){showToast('🎵 Suara aktif');playSound(currentSound);}
-  else showToast('🔇 Suara dimatikan');
+// ══ SPLASH ══
+function initSplash(){
+  const splash=document.getElementById('splash'),sc=document.getElementById('splash-content');
+  function dismiss(){sc.classList.add('fade-out');setTimeout(()=>{splash.classList.add('dismiss');setTimeout(()=>splash.classList.add('gone'),900);},180);}
+  splash.addEventListener('click',dismiss);setTimeout(dismiss,2000);
 }
 
-function updateVolume(val) {
-  volume=val/100;
-  document.getElementById('vol-val').textContent=val+'%';
-  try{localStorage.setItem(SK.VOL,val);}catch(e){}
+// ══ FLOWERS ══
+function initFlowers(){
+  const cv=document.getElementById('flower-canvas');const petals=['🌸','🌺','🌷','✿','🩷'];
+  for(let i=0;i<10;i++){const p=document.createElement('div');p.className='petal';p.textContent=petals[Math.floor(Math.random()*petals.length)];const left=Math.random()*100,dur=9+Math.random()*12,delay=Math.random()*18,size=11+Math.random()*10;p.style.cssText=`left:${left}%;font-size:${size}px;animation-duration:${dur}s;animation-delay:${delay}s;`;cv.appendChild(p);}
 }
 
-function testCurrentSound(){ playSound(currentSound,volume); }
-
-// ── STORAGE ──
-function saveState() {
-  try {
-    localStorage.setItem(SK.DONE,  JSON.stringify([...done]));
-    localStorage.setItem(SK.DATE,  getWIBDate());
-    localStorage.setItem(SK.FIRED, JSON.stringify([...firedToday]));
-    localStorage.setItem(SK.WATER, String(waterCount));
-    localStorage.setItem(SK.MOOD,  moodToday!==null?String(moodToday):'');
-    localStorage.setItem(SK.STREAK,String(streak));
-    localStorage.setItem(SK.BEST,  String(bestStreak));
-  } catch(e){}
-}
-
-function loadState() {
-  try {
-    const savedDate=localStorage.getItem(SK.DATE), today=getWIBDate();
-    if(savedDate===today) {
-      const sd=localStorage.getItem(SK.DONE); if(sd) done=new Set(JSON.parse(sd));
-      const sf=localStorage.getItem(SK.FIRED); if(sf) firedToday=new Set(JSON.parse(sf));
-      waterCount=parseInt(localStorage.getItem(SK.WATER)||'0');
-      const sm=localStorage.getItem(SK.MOOD); moodToday=(sm!==null&&sm!=='')?parseInt(sm):null;
-    } else {
-      const lw=localStorage.getItem(SK.LASTWIN);
-      const yd=new Date(getWIBNow()); yd.setUTCDate(yd.getUTCDate()-1);
-      streak=(lw===yd.toISOString().slice(0,10))?parseInt(localStorage.getItem(SK.STREAK)||'0'):0;
-      done.clear();firedToday.clear();waterCount=0;moodToday=null;saveState();
-    }
-    streak=parseInt(localStorage.getItem(SK.STREAK)||'0');
-    bestStreak=parseInt(localStorage.getItem(SK.BEST)||'0');
-    const ss=localStorage.getItem(SK.SOUND); if(ss) currentSound=ss;
-    const sv=localStorage.getItem(SK.VOL);
-    if(sv){volume=parseInt(sv)/100;document.getElementById('vol-slider').value=sv;document.getElementById('vol-val').textContent=sv+'%';}
-    const so=localStorage.getItem(SK.SOUNDON); if(so!==null) soundOn=so==='1';
-    const sn=localStorage.getItem(SK.NOTIF);
-    if(sn==='true'&&'Notification'in window&&Notification.permission==='granted') startNotif(true);
-  } catch(e){}
-}
-
-// ── SPLASH ──
-function initSplash() {
-  const splash=document.getElementById('splash'), sc=document.getElementById('splash-content');
-  function dismiss() {
-    sc.classList.add('fade-out');
-    setTimeout(()=>{
-      splash.classList.add('dismiss');
-      setTimeout(()=>splash.classList.add('gone'), 900);
-    }, 180);
-  }
-  splash.addEventListener('click', dismiss);
-  setTimeout(dismiss, 2000);
-}
-
-// ── FLOWERS ──
-function initFlowers() {
-  const cv=document.getElementById('flower-canvas');
-  const petals=['🌸','🌺','🌷','✿','🩷'];
-  for(let i=0;i<10;i++){
-    const p=document.createElement('div');
-    p.className='petal';
-    p.textContent=petals[Math.floor(Math.random()*petals.length)];
-    const left=Math.random()*100, dur=9+Math.random()*12, delay=Math.random()*18, size=11+Math.random()*10;
-    p.style.cssText=`left:${left}%;font-size:${size}px;animation-duration:${dur}s;animation-delay:${delay}s;`;
-    cv.appendChild(p);
-  }
-}
-
-// ── WATER ──
-function renderWater() {
-  const c=document.getElementById('water-glasses'); c.innerHTML='';
-  for(let i=0;i<8;i++){
-    const btn=document.createElement('button');
-    btn.className='glass-btn'+(i<waterCount?' filled':'');
-    btn.innerHTML='<span class="glass-icon">💧</span>';
-    btn.onclick=()=>toggleWater(i);
-    c.appendChild(btn);
-  }
+// ══ WATER ══
+function renderWater(){
+  const c=document.getElementById('water-glasses');c.innerHTML='';
+  for(let i=0;i<8;i++){const btn=document.createElement('button');btn.className='glass-btn'+(i<waterCount?' filled':'');btn.innerHTML='<span class="glass-icon">💧</span>';btn.onclick=()=>toggleWater(i);c.appendChild(btn);}
   document.getElementById('water-count').textContent=waterCount+' / 8 gelas';
 }
-function toggleWater(idx) {
-  waterCount=idx<waterCount?idx:idx+1;
-  playWaterSound();
-  renderWater(); saveState();
-  if(waterCount===8){showToast('💧 Target minum air tercapai! 🎉');playAllDoneSound();}
-}
+function toggleWater(idx){waterCount=idx<waterCount?idx:idx+1;playWaterSound();renderWater();saveState();if(waterCount===8){showToast('💧 Target minum air tercapai! 🎉');playAllDoneSound();}}
 
-// ── MOOD ──
-function renderMood() {
-  const row=document.getElementById('mood-row'); row.innerHTML='';
-  MOODS.forEach((m,i)=>{
-    const btn=document.createElement('button');
-    btn.className='mood-btn'+(moodToday===i?' selected':'');
-    btn.textContent=m.emoji;
-    btn.onclick=()=>selectMood(i);
-    row.appendChild(btn);
-  });
+// ══ MOOD ══
+function renderMood(){
+  const row=document.getElementById('mood-row');row.innerHTML='';
+  MOODS.forEach((m,i)=>{const btn=document.createElement('button');btn.className='mood-btn'+(moodToday===i?' selected':'');btn.textContent=m.emoji;btn.onclick=()=>selectMood(i);row.appendChild(btn);});
   document.getElementById('mood-label').textContent=moodToday!==null?MOODS[moodToday].label:'Pilih mood kamu...';
 }
-function selectMood(i) {
-  moodToday=(moodToday===i)?null:i;
-  playSound('soft'); renderMood(); saveState();
-  if(moodToday!==null) showToast(MOODS[moodToday].emoji+' '+MOODS[moodToday].label);
+function selectMood(i){moodToday=(moodToday===i)?null:i;playSound('soft');renderMood();saveState();if(moodToday!==null)showToast(MOODS[moodToday].emoji+' '+MOODS[moodToday].label);}
+
+// ══ STREAK ══
+function updateStreakUI(){document.getElementById('streak-num').textContent=streak;document.getElementById('streak-best').textContent='Rekor: '+bestStreak+' hari';}
+function checkStreakOnComplete(){
+  if(done.size===TOTAL){const today=getWIBDate(),lw=localStorage.getItem(SK.LASTWIN);
+    if(lw!==today){streak++;localStorage.setItem(SK.LASTWIN,today);if(streak>bestStreak){bestStreak=streak;showToast('🏆 Rekor baru! '+bestStreak+' hari!');}else showToast('🔥 Streak '+streak+' hari! Dyy konsisten!');playAllDoneSound();saveState();updateStreakUI();}}
 }
 
-// ── STREAK ──
-function updateStreakUI() {
-  document.getElementById('streak-num').textContent=streak;
-  document.getElementById('streak-best').textContent='Rekor: '+bestStreak+' hari';
+// ══ RENDER TASKS ══
+function renderGroup(group,cid){
+  const el=document.getElementById(cid);el.innerHTML='';
+  TASKS[group].forEach(t=>{const card=document.createElement('div');card.className='task-card'+(done.has(t.id)?' done':'');card.dataset.id=t.id;card.innerHTML=`<div class="check-btn"></div><div class="task-icon ${t.color}">${t.icon}</div><div class="task-body"><div class="task-name">${t.name}</div><div class="task-sub">${t.sub}</div></div>`;card.addEventListener('click',()=>toggleTask(t.id,t.name));el.appendChild(card);});
 }
-function checkStreakOnComplete() {
-  if(done.size===TOTAL){
-    const today=getWIBDate(), lw=localStorage.getItem(SK.LASTWIN);
-    if(lw!==today){
-      streak++;
-      localStorage.setItem(SK.LASTWIN,today);
-      if(streak>bestStreak){bestStreak=streak;showToast('🏆 Rekor baru! '+bestStreak+' hari!');}
-      else showToast('🔥 Streak '+streak+' hari! Dyy konsisten!');
-      playAllDoneSound(); saveState(); updateStreakUI();
-    }
-  }
-}
+function renderAll(){renderGroup('pagi','group-pagi');renderGroup('siang','group-siang');renderGroup('malam','group-malam');updateProgress();}
 
-// ── RENDER TASKS ──
-function renderGroup(group, cid) {
-  const el=document.getElementById(cid); el.innerHTML='';
-  TASKS[group].forEach(t=>{
-    const card=document.createElement('div');
-    card.className='task-card'+(done.has(t.id)?' done':'');
-    card.dataset.id=t.id;
-    card.innerHTML=`<div class="check-btn"></div><div class="task-icon ${t.color}">${t.icon}</div><div class="task-body"><div class="task-name">${t.name}</div><div class="task-sub">${t.sub}</div></div>`;
-    card.addEventListener('click',()=>toggleTask(t.id,t.name));
-    el.appendChild(card);
-  });
-}
-function renderAll() {
-  renderGroup('pagi','group-pagi');
-  renderGroup('siang','group-siang');
-  renderGroup('malam','group-malam');
-  updateProgress();
-}
-
-// ── TOGGLE TASK ──
-function toggleTask(id,name) {
+// ══ TOGGLE TASK ══
+function toggleTask(id,name){
   if(done.has(id)){done.delete(id);playUndoSound();showToast('↩️ '+name);}
-  else{
-    done.add(id);playSound(currentSound);
-    if(done.size%4===0&&done.size!==TOTAL) showToast('🧁 Ingat Dyy: Stop Gula & Junkfood!');
-    else showToast('✅ '+name);
-  }
-  document.querySelectorAll('.task-card').forEach(c=>{if(c.dataset.id===id) c.classList.toggle('done',done.has(id));});
-  updateProgress(); saveState(); checkStreakOnComplete();
+  else{done.add(id);playSound(currentSound);if(done.size%4===0&&done.size!==TOTAL)showToast('🧁 Ingat Dyy: Stop Gula & Junkfood!');else showToast('✅ '+name);}
+  document.querySelectorAll('.task-card').forEach(c=>{if(c.dataset.id===id)c.classList.toggle('done',done.has(id));});
+  updateProgress();saveState();checkStreakOnComplete();
 }
 
-// ── PROGRESS ──
-function updateProgress() {
-  const n=done.size, pct=Math.round(n/TOTAL*100);
+// ══ PROGRESS ══
+function updateProgress(){
+  const n=done.size,pct=Math.round(n/TOTAL*100);
   document.getElementById('prog-fill').style.width=pct+'%';
   document.getElementById('prog-label').textContent=n+' dari '+TOTAL+' selesai';
   document.getElementById('prog-pct').textContent=pct+'%';
@@ -807,92 +654,340 @@ function updateProgress() {
   document.getElementById('all-done').classList.toggle('show',n===TOTAL);
 }
 
-// ── DATE ──
-function updateDate() {
-  const now=getWIBNow();
-  const days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
-  document.getElementById('date-chip').textContent=days[now.getUTCDay()]+', '+now.getUTCDate()+' '+months[now.getUTCMonth()];
-}
+// ══ DATE + COUNTDOWN ══
+function updateDate(){const now=getWIBNow();const days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];document.getElementById('date-chip').textContent=days[now.getUTCDay()]+', '+now.getUTCDate()+' '+months[now.getUTCMonth()];}
+function updateCountdown(){const wib=getWIBNow(),h=wib.getUTCHours(),m=wib.getUTCMinutes(),s=wib.getUTCSeconds();const left=86400-(h*3600+m*60+s);const hh=String(Math.floor(left/3600)).padStart(2,'0');const mm=String(Math.floor(left%3600/60)).padStart(2,'0');const ss=String(left%60).padStart(2,'0');document.getElementById('countdown-badge').textContent=hh+':'+mm+':'+ss;document.getElementById('countdown-text').textContent='Reset dalam '+hh+':'+mm+':'+ss;}
 
-// ── COUNTDOWN ──
-function updateCountdown() {
-  const wib=getWIBNow(), h=wib.getUTCHours(), m=wib.getUTCMinutes(), s=wib.getUTCSeconds();
-  const left=86400-(h*3600+m*60+s);
-  const hh=String(Math.floor(left/3600)).padStart(2,'0');
-  const mm=String(Math.floor(left%3600/60)).padStart(2,'0');
-  const ss=String(left%60).padStart(2,'0');
-  document.getElementById('countdown-badge').textContent=hh+':'+mm+':'+ss;
-  document.getElementById('countdown-text').textContent='Reset dalam '+hh+':'+mm+':'+ss;
-}
-
-// ── RESET ──
-function resetAll() {
-  done.clear();firedToday.clear();waterCount=0;moodToday=null;
-  saveState();renderAll();renderWater();renderMood();showToast('🔄 Progress direset!');
-}
-
+// ══ RESET ══
+function resetAll(){done.clear();firedToday.clear();waterCount=0;moodToday=null;saveState();renderAll();renderWater();renderMood();showToast('🔄 Progress direset!');}
 let lastWIBDate=getWIBDate();
-function checkMidnightReset() {
-  const today=getWIBDate();
-  if(today!==lastWIBDate){
-    lastWIBDate=today;done.clear();firedToday.clear();waterCount=0;moodToday=null;
-    saveState();renderAll();renderWater();renderMood();updateDate();showToast('🌙 Hari baru! Progress direset otomatis');
+function checkMidnightReset(){const today=getWIBDate();if(today!==lastWIBDate){lastWIBDate=today;done.clear();firedToday.clear();waterCount=0;moodToday=null;saveState();renderAll();renderWater();renderMood();updateDate();showToast('🌙 Hari baru! Progress direset otomatis');}updateCountdown();}
+
+// ══ TOAST ══
+function showToast(msg){const ct=document.getElementById('toast-container');const t=document.createElement('div');t.className='toast';t.textContent=msg;ct.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),280);},2200);}
+
+// ══ NOTIF ══
+function toggleNotif(){if(!('Notification'in window)){showToast('⚠️ Browser ini tidak mendukung notifikasi');return;}if(notifOn){notifOn=false;if(tickInterval){clearInterval(tickInterval);tickInterval=null;}document.getElementById('btn-notif').classList.remove('active');document.getElementById('notif-icon').textContent='🔔';document.getElementById('notif-label').textContent='Aktifkan Notifikasi';document.getElementById('notif-status').textContent='';try{localStorage.setItem(SK.NOTIF,'false');}catch(e){}showToast('🔕 Notifikasi dimatikan');return;}if(Notification.permission==='granted'){startNotif(false);}else if(Notification.permission==='denied'){document.getElementById('notif-status').textContent='⚠️ Izin ditolak browser.';showToast('⚠️ Izin notifikasi ditolak');}else{Notification.requestPermission().then(p=>p==='granted'?startNotif(false):(document.getElementById('notif-status').textContent='⚠️ Izin tidak diberikan.',showToast('⚠️ Izin tidak diberikan')));}}
+function startNotif(silent){notifOn=true;document.getElementById('btn-notif').classList.add('active');document.getElementById('notif-icon').textContent='🔕';document.getElementById('notif-label').textContent='Notifikasi Aktif';document.getElementById('notif-status').textContent='✅ Pengingat aktif untuk Dyy';if(!silent)showToast('🔔 Notifikasi aktif!');try{localStorage.setItem(SK.NOTIF,'true');}catch(e){}if(tickInterval)clearInterval(tickInterval);tickInterval=setInterval(checkNotifSchedule,30000);checkNotifSchedule();}
+function checkNotifSchedule(){if(!notifOn||Notification.permission!=='granted')return;const wib=getWIBNow(),h=wib.getUTCHours(),m=wib.getUTCMinutes(),key=getWIBDate();NOTIF_SCHEDULE.forEach(slot=>{const k=key+'-'+slot.h+':'+String(slot.m).padStart(2,'0');if(firedToday.has(k))return;if(h===slot.h&&m===slot.m){firedToday.add(k);saveState();try{new Notification('Rutinku Harian 🌸',{body:'Dyy, '+slot.msg,icon:'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',tag:k});}catch(e){}}});}
+
+// ══ AVATAR ══
+function switchAvTab(tab,btn){
+  document.querySelectorAll('.av-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.av-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('av-'+tab).classList.add('active');
+  btn.classList.add('active');
+}
+
+function shade(hex,amt){let r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);r=Math.max(0,Math.min(255,r+amt));g=Math.max(0,Math.min(255,g+amt));b=Math.max(0,Math.min(255,b+amt));return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');}
+
+function mkSwatch(colors,activeVal,onChange,containerId){
+  const el=document.getElementById(containerId);if(!el)return;el.innerHTML='';
+  colors.forEach(c=>{const s=document.createElement('div');s.className='swatch'+(activeVal===c.v?' active':'');s.style.background=c.v;s.title=c.n;if(c.v==='#ffffff')s.style.border='1.5px solid #e8e8e8';s.onclick=()=>{onChange(c.v);mkSwatch(colors,c.v,onChange,containerId);drawAvatar();};el.appendChild(s);});
+}
+function mkOpts(opts,activeVal,onChange,containerId){
+  const el=document.getElementById(containerId);if(!el)return;el.innerHTML='';
+  opts.forEach(o=>{const b=document.createElement('button');b.className='opt-btn'+(activeVal===o.id?' active':'');b.textContent=o.n;b.onclick=()=>{onChange(o.id);mkOpts(opts,o.id,onChange,containerId);drawAvatar();};el.appendChild(b);});
+}
+function renderAvatarControls(){
+  mkSwatch(SKIN_TONES,avState.skin,v=>{avState.skin=v;},'skin-swatches');
+  mkSwatch(HAIR_COLORS,avState.hairColor,v=>{avState.hairColor=v;},'hair-color-swatches');
+  mkOpts(HAIR_STYLES,avState.hairStyle,v=>{avState.hairStyle=v;},'hair-style-opts');
+  mkSwatch(OUTFIT_COLORS,avState.outfitColor,v=>{avState.outfitColor=v;},'outfit-color-swatches');
+  mkOpts(OUTFITS,avState.outfit,v=>{avState.outfit=v;},'outfit-opts');
+  mkOpts(ACCESSORIES,avState.acc,v=>{avState.acc=v;},'acc-opts');
+  mkSwatch(LIP_COLORS,avState.lipColor,v=>{avState.lipColor=v;},'lip-swatches');
+  mkSwatch(NAIL_COLORS,avState.nailColor,v=>{avState.nailColor=v;},'nail-swatches');
+  mkOpts(EXPRESSIONS,avState.expr,v=>{avState.expr=v;},'expr-opts');
+}
+
+function drawAvatar(){
+  const svg=document.getElementById('avatar-svg');if(!svg)return;
+  const s=avState,sk=s.skin,hc=s.hairColor,oc=s.outfitColor;
+  const skinD=shade(sk,-25),skinH=shade(sk,18);
+  const lipC=s.lipColor,nc=s.nailColor,outlineC=shade(oc,-45);
+  const expr=s.expr||'happy';
+  const nameVal=(document.getElementById('avatar-name')||{value:'Dyy'}).value;
+
+  // ── HAIR ──
+  let hairBack='',hairFront='';
+  const hS=shade(hc,-22);
+  if(s.hairStyle==='straight'){
+    hairBack=`<ellipse cx="100" cy="78" rx="46" ry="52" fill="${hc}"/>
+    <rect x="54" y="88" width="16" height="90" rx="8" fill="${hc}"/>
+    <rect x="130" y="88" width="16" height="90" rx="8" fill="${hc}"/>`;
+    hairFront=`<path d="M54 82 Q100 40 146 82 Q138 68 100 60 Q62 68 54 82Z" fill="${hc}"/>
+    <path d="M54 82 Q58 72 68 76" fill="${hS}"/>
+    <path d="M146 82 Q142 72 132 76" fill="${hS}"/>`;
+  }else if(s.hairStyle==='wavy'){
+    hairBack=`<ellipse cx="100" cy="76" rx="47" ry="53" fill="${hc}"/>
+    <path d="M53 95 Q44 125 50 155 Q44 175 52 200" stroke="${hc}" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <path d="M147 95 Q156 125 150 155 Q156 175 148 200" stroke="${hc}" stroke-width="18" fill="none" stroke-linecap="round"/>
+    <path d="M52 160 Q46 175 54 188" stroke="${hS}" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M148 160 Q154 175 146 188" stroke="${hS}" stroke-width="8" fill="none" stroke-linecap="round"/>`;
+    hairFront=`<path d="M53 82 Q100 38 147 82 Q136 62 100 56 Q64 62 53 82Z" fill="${hc}"/>
+    <path d="M53 82 Q60 70 72 74" fill="${hS}"/>`;
+  }else if(s.hairStyle==='curly'){
+    hairBack=`<ellipse cx="100" cy="74" rx="48" ry="54" fill="${hc}"/>
+    <circle cx="54" cy="128" r="20" fill="${hc}"/>
+    <circle cx="50" cy="158" r="17" fill="${hc}"/>
+    <circle cx="54" cy="186" r="14" fill="${hc}"/>
+    <circle cx="146" cy="128" r="20" fill="${hc}"/>
+    <circle cx="150" cy="158" r="17" fill="${hc}"/>
+    <circle cx="146" cy="186" r="14" fill="${hc}"/>`;
+    hairFront=`<path d="M52 80 Q100 36 148 80 Q134 58 100 52 Q66 58 52 80Z" fill="${hc}"/>
+    <circle cx="62" cy="66" r="16" fill="${hc}"/>
+    <circle cx="138" cy="66" r="16" fill="${hc}"/>
+    <circle cx="100" cy="52" r="10" fill="${hS}"/>`;
+  }else if(s.hairStyle==='bun'){
+    hairBack=`<ellipse cx="100" cy="78" rx="44" ry="48" fill="${hc}"/>`;
+    hairFront=`<path d="M56 82 Q100 42 144 82 Q132 62 100 56 Q68 62 56 82Z" fill="${hc}"/>
+    <circle cx="100" cy="30" r="24" fill="${hc}"/>
+    <circle cx="100" cy="28" r="15" fill="${hS}"/>
+    <circle cx="106" cy="24" r="5" fill="${shade(hc,20)}"/>`;
+  }else if(s.hairStyle==='ponytail'){
+    hairBack=`<ellipse cx="100" cy="76" rx="44" ry="50" fill="${hc}"/>
+    <path d="M143 82 Q168 110 162 170 Q158 200 148 215" stroke="${hc}" stroke-width="20" fill="none" stroke-linecap="round"/>
+    <path d="M148 215 Q144 228 150 238" stroke="${hc}" stroke-width="14" fill="none" stroke-linecap="round"/>`;
+    hairFront=`<path d="M56 82 Q100 40 144 82 Q132 62 100 56 Q68 62 56 82Z" fill="${hc}"/>
+    <ellipse cx="138" cy="80" rx="10" ry="8" fill="${shade(oc,20)}" stroke="${outlineC}" stroke-width="1"/>`;
+  }else if(s.hairStyle==='short'){
+    hairBack=`<ellipse cx="100" cy="72" rx="44" ry="42" fill="${hc}"/>
+    <rect x="56" y="78" width="15" height="38" rx="8" fill="${hc}"/>
+    <rect x="129" y="78" width="15" height="38" rx="8" fill="${hc}"/>`;
+    hairFront=`<path d="M56 78 Q100 38 144 78 Q130 58 100 52 Q70 58 56 78Z" fill="${hc}"/>
+    <path d="M56 78 Q62 66 76 70" fill="${hS}"/>`;
   }
-  updateCountdown();
-}
 
-// ── TOAST ──
-function showToast(msg) {
-  const ct=document.getElementById('toast-container');
-  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
-  ct.appendChild(t);
-  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),280);},2200);
-}
+  // ── ANIME FACE ──
+  // Head shape: rounder/bigger, slight chin point — anime style
+  const faceEl=`
+    <ellipse cx="100" cy="100" rx="44" ry="50" fill="${sk}" stroke="${shade(sk,-18)}" stroke-width="1.2"/>
+    <ellipse cx="100" cy="142" rx="20" ry="14" fill="${sk}" stroke="${shade(sk,-18)}" stroke-width="1"/>
+    <path d="M80 138 Q100 155 120 138" fill="${sk}"/>
+    <ellipse cx="56" cy="112" rx="7" ry="10" fill="${skinD}"/>
+    <ellipse cx="144" cy="112" rx="7" ry="10" fill="${skinD}"/>
+    <ellipse cx="100" cy="98" rx="42" ry="10" fill="${skinH}" opacity="0.35"/>
+  `;
 
-// ── NOTIF ──
-function toggleNotif() {
-  if(!('Notification'in window)){showToast('⚠️ Browser ini tidak mendukung notifikasi');return;}
-  if(notifOn){
-    notifOn=false;if(tickInterval){clearInterval(tickInterval);tickInterval=null;}
-    document.getElementById('btn-notif').classList.remove('active');
-    document.getElementById('notif-icon').textContent='🔔';
-    document.getElementById('notif-label').textContent='Aktifkan Notifikasi';
-    document.getElementById('notif-status').textContent='';
-    try{localStorage.setItem(SK.NOTIF,'false');}catch(e){}
-    showToast('🔕 Notifikasi dimatikan');return;
+  // ── ANIME EYES by expression ──
+  // Big sparkly anime eyes
+  const eyeBase=(cx,flip)=>{
+    const ex=cx, ey=98;
+    const pupilX=flip?ex-1:ex+1;
+    return `
+      <ellipse cx="${ex}" cy="${ey}" rx="13" ry="15" fill="#1a0830"/>
+      <ellipse cx="${ex}" cy="${ey+1}" rx="11" ry="13" fill="#3d2060"/>
+      <ellipse cx="${ex}" cy="${ey+2}" rx="9" ry="11" fill="#6b3fa0"/>
+      <ellipse cx="${pupilX}" cy="${ey+1}" rx="5.5" ry="6.5" fill="#1a0830"/>
+      <circle cx="${ex-4}" cy="${ey-5}" r="3.5" fill="white" opacity="0.95"/>
+      <circle cx="${ex+4}" cy="${ey+3}" r="1.8" fill="white" opacity="0.7"/>
+    `;
+  };
+
+  let eyeL='',eyeR='',browL='',browR='',mouthEl='',cheekEl='',extraEl='';
+
+  // Brows (change per expression)
+  const browNormal=(cx)=>`<path d="M${cx-10} 80 Q${cx} 75 ${cx+10} 80" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.8" stroke-linecap="round"/>`;
+  const browAngle=(cx,down)=>down
+    ?`<path d="M${cx-10} 78 Q${cx} 82 ${cx+10} 79" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.8" stroke-linecap="round"/>`
+    :`<path d="M${cx-10} 80 Q${cx} 74 ${cx+10} 77" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.8" stroke-linecap="round"/>`;
+
+  if(expr==='happy'){
+    // Big eyes, curved happy mouth, rosy cheeks
+    eyeL=eyeBase(82,false); eyeR=eyeBase(118,true);
+    browL=browNormal(82); browR=browNormal(118);
+    mouthEl=`<path d="M87 128 Q100 140 113 128" fill="none" stroke="${lipC}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M87 128 Q100 140 113 128" fill="${lipC}" opacity="0.18"/>
+    <ellipse cx="100" cy="133" rx="7" ry="3.5" fill="${lipC}" opacity="0.35"/>`;
+    cheekEl=`<ellipse cx="70" cy="118" rx="12" ry="7" fill="#ffb3c6" opacity="0.55"/>
+    <ellipse cx="130" cy="118" rx="12" ry="7" fill="#ffb3c6" opacity="0.55"/>`;
+  }else if(expr==='excited'){
+    // Eyes with stars/sparkle shape, huge smile
+    eyeL=`<ellipse cx="82" cy="98" rx="13" ry="16" fill="#1a0830"/>
+    <ellipse cx="82" cy="99" rx="11" ry="14" fill="#3d2060"/>
+    <ellipse cx="82" cy="100" rx="9" ry="12" fill="#7b5ea7"/>
+    <ellipse cx="82" cy="100" rx="5" ry="7" fill="#1a0830"/>
+    <circle cx="76" cy="93" r="4" fill="white" opacity="0.95"/>
+    <circle cx="87" cy="104" r="2" fill="white" opacity="0.8"/>
+    <circle cx="78" cy="105" r="1.5" fill="white" opacity="0.7"/>`;
+    eyeR=`<ellipse cx="118" cy="98" rx="13" ry="16" fill="#1a0830"/>
+    <ellipse cx="118" cy="99" rx="11" ry="14" fill="#3d2060"/>
+    <ellipse cx="118" cy="100" rx="9" ry="12" fill="#7b5ea7"/>
+    <ellipse cx="118" cy="100" rx="5" ry="7" fill="#1a0830"/>
+    <circle cx="112" cy="93" r="4" fill="white" opacity="0.95"/>
+    <circle cx="123" cy="104" r="2" fill="white" opacity="0.8"/>`;
+    browL=`<path d="M72 76 Q82 70 92 74" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.8" stroke-linecap="round"/>`;
+    browR=`<path d="M108 74 Q118 70 128 76" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.8" stroke-linecap="round"/>`;
+    mouthEl=`<path d="M84 126 Q100 145 116 126" fill="${lipC}" opacity="0.3"/>
+    <path d="M84 126 Q100 145 116 126" fill="none" stroke="${lipC}" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="100" cy="134" rx="9" ry="5" fill="${lipC}" opacity="0.5"/>`;
+    cheekEl=`<ellipse cx="68" cy="116" rx="14" ry="8" fill="#ff85a1" opacity="0.6"/>
+    <ellipse cx="132" cy="116" rx="14" ry="8" fill="#ff85a1" opacity="0.6"/>`;
+    extraEl=`<text x="62" y="88" font-size="10" opacity="0.8">✦</text><text x="132" y="86" font-size="10" opacity="0.8">✦</text>`;
+  }else if(expr==='shy'){
+    // Eyes half-closed, small shy mouth, big blush
+    eyeL=`<ellipse cx="82" cy="100" rx="13" ry="10" fill="#1a0830"/>
+    <ellipse cx="82" cy="101" rx="11" ry="8" fill="#4a2a80"/>
+    <ellipse cx="82" cy="101" rx="9" ry="6" fill="#7b5ea7"/>
+    <ellipse cx="83" cy="101" rx="4.5" ry="5" fill="#1a0830"/>
+    <circle cx="77" cy="97" r="3" fill="white" opacity="0.9"/>
+    <path d="M69 100 Q82 95 95 100" fill="${sk}" opacity="0.6"/>`;
+    eyeR=`<ellipse cx="118" cy="100" rx="13" ry="10" fill="#1a0830"/>
+    <ellipse cx="118" cy="101" rx="11" ry="8" fill="#4a2a80"/>
+    <ellipse cx="118" cy="101" rx="9" ry="6" fill="#7b5ea7"/>
+    <ellipse cx="119" cy="101" rx="4.5" ry="5" fill="#1a0830"/>
+    <circle cx="113" cy="97" r="3" fill="white" opacity="0.9"/>
+    <path d="M105 100 Q118 95 131 100" fill="${sk}" opacity="0.6"/>`;
+    browL=`<path d="M72 82 Q82 79 92 82" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.5" stroke-linecap="round"/>`;
+    browR=`<path d="M108 82 Q118 79 128 82" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.5" stroke-linecap="round"/>`;
+    mouthEl=`<path d="M94 130 Q100 135 106 130" fill="none" stroke="${lipC}" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="100" cy="131" rx="4" ry="2" fill="${lipC}" opacity="0.4"/>`;
+    cheekEl=`<ellipse cx="68" cy="120" rx="16" ry="10" fill="#ff6b9d" opacity="0.65"/>
+    <ellipse cx="132" cy="120" rx="16" ry="10" fill="#ff6b9d" opacity="0.65"/>`;
+    extraEl=`<text x="56" y="116" font-size="9" opacity="0.7">♡</text><text x="138" y="116" font-size="9" opacity="0.7">♡</text>`;
+  }else if(expr==='cool'){
+    // Half-lid eyes (sleepy/cool), smirk
+    eyeL=`<ellipse cx="82" cy="100" rx="13" ry="13" fill="#1a0830"/>
+    <ellipse cx="82" cy="101" rx="11" ry="11" fill="#2a1050"/>
+    <ellipse cx="82" cy="101" rx="9" ry="9" fill="#5a3090"/>
+    <ellipse cx="83" cy="101" rx="5" ry="6" fill="#0a0020"/>
+    <circle cx="77" cy="96" r="3.5" fill="white" opacity="0.9"/>
+    <path d="M69 96 Q82 93 95 96" fill="${sk}"/>`;
+    eyeR=`<ellipse cx="118" cy="100" rx="13" ry="13" fill="#1a0830"/>
+    <ellipse cx="118" cy="101" rx="11" ry="11" fill="#2a1050"/>
+    <ellipse cx="118" cy="101" rx="9" ry="9" fill="#5a3090"/>
+    <ellipse cx="119" cy="101" rx="5" ry="6" fill="#0a0020"/>
+    <circle cx="113" cy="96" r="3.5" fill="white" opacity="0.9"/>
+    <path d="M105 96 Q118 93 131 96" fill="${sk}"/>`;
+    browL=`<path d="M72 80 Q82 76 90 80" fill="none" stroke="${shade(hc,-30)}" stroke-width="3" stroke-linecap="round"/>`;
+    browR=`<path d="M110 80 Q118 76 128 80" fill="none" stroke="${shade(hc,-30)}" stroke-width="3" stroke-linecap="round"/>`;
+    mouthEl=`<path d="M92 128 Q103 132 112 127" fill="none" stroke="${lipC}" stroke-width="2.5" stroke-linecap="round"/>`;
+    cheekEl='';
+    extraEl=`<text x="62" y="90" font-size="9" opacity="0.6">✧</text>`;
+  }else if(expr==='sad'){
+    // Teary eyes, downturned mouth
+    eyeL=eyeBase(82,false); eyeR=eyeBase(118,true);
+    browL=browAngle(82,true); browR=browAngle(118,true);
+    mouthEl=`<path d="M88 133 Q100 125 112 133" fill="none" stroke="${lipC}" stroke-width="2.5" stroke-linecap="round"/>`;
+    cheekEl=`<ellipse cx="70" cy="118" rx="11" ry="6" fill="#b3c6ff" opacity="0.45"/>
+    <ellipse cx="130" cy="118" rx="11" ry="6" fill="#b3c6ff" opacity="0.45"/>`;
+    // Tear drops
+    extraEl=`<ellipse cx="78" cy="114" rx="2.5" ry="4" fill="#9ec4f2" opacity="0.8"/>
+    <path d="M78 118 Q76 122 78 124 Q80 122 78 118Z" fill="#9ec4f2" opacity="0.7"/>`;
+  }else if(expr==='wink'){
+    // One eye wink (closed arc), one normal
+    eyeL=eyeBase(82,false);
+    eyeR=`<path d="M105 98 Q118 90 131 98" fill="none" stroke="#1a0830" stroke-width="4" stroke-linecap="round"/>
+    <path d="M107 100 Q118 94 129 100" fill="none" stroke="#3d2060" stroke-width="2" stroke-linecap="round"/>`;
+    browL=browNormal(82);
+    browR=`<path d="M108 82 Q118 77 128 81" fill="none" stroke="${shade(hc,-30)}" stroke-width="2.8" stroke-linecap="round"/>`;
+    mouthEl=`<path d="M88 128 Q100 140 112 128" fill="none" stroke="${lipC}" stroke-width="3" stroke-linecap="round"/>
+    <ellipse cx="100" cy="133" rx="7" ry="3.5" fill="${lipC}" opacity="0.3"/>`;
+    cheekEl=`<ellipse cx="70" cy="118" rx="12" ry="7" fill="#ffb3c6" opacity="0.55"/>
+    <ellipse cx="130" cy="118" rx="12" ry="7" fill="#ffb3c6" opacity="0.55"/>`;
+    extraEl=`<text x="130" y="114" font-size="10" opacity="0.8">♡</text>`;
   }
-  if(Notification.permission==='granted'){startNotif(false);}
-  else if(Notification.permission==='denied'){document.getElementById('notif-status').textContent='⚠️ Izin ditolak browser.';showToast('⚠️ Izin notifikasi ditolak');}
-  else{Notification.requestPermission().then(p=>p==='granted'?startNotif(false):(document.getElementById('notif-status').textContent='⚠️ Izin tidak diberikan.',showToast('⚠️ Izin tidak diberikan')));}
-}
-function startNotif(silent) {
-  notifOn=true;
-  document.getElementById('btn-notif').classList.add('active');
-  document.getElementById('notif-icon').textContent='🔕';
-  document.getElementById('notif-label').textContent='Notifikasi Aktif';
-  document.getElementById('notif-status').textContent='✅ Pengingat aktif untuk Dyy';
-  if(!silent) showToast('🔔 Notifikasi aktif!');
-  try{localStorage.setItem(SK.NOTIF,'true');}catch(e){}
-  if(tickInterval) clearInterval(tickInterval);
-  tickInterval=setInterval(checkNotifSchedule,30000);
-  checkNotifSchedule();
-}
-function checkNotifSchedule() {
-  if(!notifOn||Notification.permission!=='granted') return;
-  const wib=getWIBNow(), h=wib.getUTCHours(), m=wib.getUTCMinutes(), key=getWIBDate();
-  NOTIF_SCHEDULE.forEach(slot=>{
-    const k=key+'-'+slot.h+':'+String(slot.m).padStart(2,'0');
-    if(firedToday.has(k)) return;
-    if(h===slot.h&&m===slot.m){
-      firedToday.add(k);saveState();
-      try{new Notification('Rutinku Harian 🌸',{body:'Dyy, '+slot.msg,icon:'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',tag:k});}catch(e){}
-    }
-  });
+
+  // Nose (tiny anime dot)
+  const noseEl=`<ellipse cx="100" cy="115" rx="2.5" ry="1.8" fill="${shade(sk,-22)}" opacity="0.7"/>`;
+
+  // Lip gloss highlight
+  const lipGloss=`<ellipse cx="100" cy="128" rx="3.5" ry="1.2" fill="white" opacity="0.45"/>`;
+
+  // ── OUTFIT ──
+  let outfitEl='',nailEl='';
+  if(s.outfit==='dress'){
+    outfitEl=`<path d="M62 178 Q50 205 40 265 L160 265 Q150 205 138 178 Q118 190 100 190 Q82 190 62 178Z" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <path d="M62 178 Q100 173 138 178" fill="none" stroke="${outlineC}" stroke-width="1.5"/>
+    <path d="M62 178 Q100 173 138 178 Q128 180 100 182 Q72 180 62 178Z" fill="${shade(oc,-12)}" opacity="0.5"/>
+    <ellipse cx="100" cy="190" rx="14" ry="6" fill="${shade(oc,-18)}"/>`;
+    nailEl=`<ellipse cx="42" cy="263" rx="4.5" ry="3" fill="${nc}"/><ellipse cx="158" cy="263" rx="4.5" ry="3" fill="${nc}"/>`;
+  }else if(s.outfit==='casual'){
+    outfitEl=`<rect x="68" y="178" width="64" height="42" rx="10" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <line x1="100" y1="178" x2="100" y2="220" stroke="${outlineC}" stroke-width="1" opacity="0.5"/>
+    <rect x="44" y="220" width="26" height="45" rx="8" fill="${shade(oc,28)}" stroke="${shade(oc,-22)}" stroke-width="1"/>
+    <rect x="130" y="220" width="26" height="45" rx="8" fill="${shade(oc,28)}" stroke="${shade(oc,-22)}" stroke-width="1"/>
+    <rect x="56" y="178" width="16" height="38" rx="8" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <rect x="128" y="178" width="16" height="38" rx="8" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>`;
+    nailEl=`<ellipse cx="54" cy="215" rx="4" ry="3" fill="${nc}"/><ellipse cx="146" cy="215" rx="4" ry="3" fill="${nc}"/>`;
+  }else if(s.outfit==='sporty'){
+    outfitEl=`<rect x="66" y="178" width="68" height="36" rx="10" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <line x1="100" y1="178" x2="100" y2="214" stroke="${outlineC}" stroke-width="2"/>
+    <rect x="66" y="214" width="30" height="51" rx="8" fill="${shade(oc,18)}" stroke="${shade(oc,-28)}" stroke-width="1"/>
+    <rect x="104" y="214" width="30" height="51" rx="8" fill="${shade(oc,18)}" stroke="${shade(oc,-28)}" stroke-width="1"/>
+    <rect x="54" y="178" width="16" height="34" rx="8" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <rect x="130" y="178" width="16" height="34" rx="8" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <rect x="68" y="252" width="28" height="12" rx="6" fill="${shade(oc,-10)}"/>
+    <rect x="104" y="252" width="28" height="12" rx="6" fill="${shade(oc,-10)}"/>`;
+    nailEl=`<ellipse cx="53" cy="211" rx="4" ry="3" fill="${nc}"/><ellipse cx="147" cy="211" rx="4" ry="3" fill="${nc}"/>`;
+  }else if(s.outfit==='formal'){
+    outfitEl=`<path d="M66 178 L100 200 L134 178 L136 178 L136 265 L64 265 L64 178Z" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <path d="M100 200 L88 178 L82 184 L100 214 L118 184 L112 178Z" fill="white" opacity="0.85"/>
+    <rect x="56" y="178" width="15" height="40" rx="8" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <rect x="129" y="178" width="15" height="40" rx="8" fill="${oc}" stroke="${outlineC}" stroke-width="1"/>
+    <ellipse cx="100" cy="196" rx="5" ry="5" fill="#f5c842" stroke="#e0a800" stroke-width="1"/>`;
+    nailEl=`<ellipse cx="55" cy="217" rx="4" ry="3" fill="${nc}"/><ellipse cx="145" cy="217" rx="4" ry="3" fill="${nc}"/>`;
+  }
+
+  // ── ACCESSORIES ──
+  let accEl='';
+  if(s.acc==='crown'){
+    accEl=`<polygon points="100,15 86,32 78,18 83,38 117,38 122,18 114,32" fill="#f5c842" stroke="#c8920a" stroke-width="1.2"/>
+    <circle cx="100" cy="18" r="4" fill="#e03c6b"/>
+    <circle cx="86" cy="34" r="3" fill="#3498db"/>
+    <circle cx="114" cy="34" r="3" fill="#3498db"/>
+    <ellipse cx="100" cy="38" rx="17" ry="4" fill="#e8b800" opacity="0.5"/>`;
+  }else if(s.acc==='bow'){
+    accEl=`<path d="M64 44 Q78 32 90 46 Q78 54 64 44Z" fill="#ff6b9d" stroke="#d4356e" stroke-width="1"/>
+    <path d="M110 46 Q122 32 136 44 Q122 54 110 46Z" fill="#ff6b9d" stroke="#d4356e" stroke-width="1"/>
+    <circle cx="100" cy="45" r="7" fill="#e03c6b" stroke="#b0255a" stroke-width="1"/>
+    <circle cx="100" cy="44" r="3" fill="#ff85a1"/>`;
+  }else if(s.acc==='glasses'){
+    accEl=`<rect x="70" y="86" width="26" height="20" rx="10" fill="none" stroke="#444" stroke-width="2.5"/>
+    <rect x="104" y="86" width="26" height="20" rx="10" fill="none" stroke="#444" stroke-width="2.5"/>
+    <line x1="70" y1="96" x2="58" y2="96" stroke="#444" stroke-width="2"/>
+    <line x1="130" y1="96" x2="142" y2="96" stroke="#444" stroke-width="2"/>
+    <line x1="96" y1="96" x2="104" y2="96" stroke="#444" stroke-width="2"/>
+    <rect x="70" y="86" width="26" height="20" rx="10" fill="#a0c4ff" opacity="0.18"/>
+    <rect x="104" y="86" width="26" height="20" rx="10" fill="#a0c4ff" opacity="0.18"/>`;
+  }else if(s.acc==='earrings'){
+    accEl=`<circle cx="56" cy="114" r="6" fill="${shade(oc,8)}" stroke="${outlineC}" stroke-width="1.2"/>
+    <ellipse cx="56" cy="126" rx="5" ry="7" fill="#f5c842" stroke="#c8920a" stroke-width="1"/>
+    <circle cx="144" cy="114" r="6" fill="${shade(oc,8)}" stroke="${outlineC}" stroke-width="1.2"/>
+    <ellipse cx="144" cy="126" rx="5" ry="7" fill="#f5c842" stroke="#c8920a" stroke-width="1"/>`;
+  }
+
+  svg.innerHTML=`
+    ${hairBack}
+    ${faceEl}
+    ${browL}${browR}
+    ${eyeL}${eyeR}
+    ${noseEl}
+    ${cheekEl}
+    ${mouthEl}
+    ${lipGloss}
+    ${extraEl}
+    ${hairFront}
+    ${accEl}
+    ${outfitEl}
+    ${nailEl}
+    <text x="100" y="272" text-anchor="middle" font-family="'Playfair Display',Georgia,serif" font-size="12" fill="#b83c65" font-style="italic">${nameVal}</text>
+  `;
 }
 
-// ── INIT ──
-setInterval(checkMidnightReset, 1000);
+function saveAvatar(){
+  try{localStorage.setItem(SK.AVATAR,JSON.stringify(avState));}catch(e){}
+  const tag=document.getElementById('saved-tag');tag.classList.add('show');setTimeout(()=>tag.classList.remove('show'),2000);
+  showToast('💖 Avatar Dyy tersimpan!');
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('avatar-name').addEventListener('input',()=>drawAvatar());
+});
+
+// ══ INIT ══
+setInterval(checkMidnightReset,1000);
 loadState();
 updateDate();
 initSplash();
@@ -903,6 +998,8 @@ renderWater();
 renderMood();
 updateStreakUI();
 updateCountdown();
+renderAvatarControls();
+drawAvatar();
 </script>
 </body>
 </html>
