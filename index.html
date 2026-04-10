@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rutinku Harian 🌸 - Dyy Edition</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,12 +26,11 @@
     --gray-100: #f5f5f5;
     --gray-200: #e8e8e8;
     --gray-400: #a0a0a0;
-    --gray-600: #666;
     --white: #ffffff;
     --text: #2d2d2d;
     --text-muted: #888;
-    --shadow-soft: 0 2px 16px rgba(212,83,126,0.08);
     --shadow-card: 0 1px 4px rgba(0,0,0,0.06);
+    --shadow-soft: 0 2px 16px rgba(212,83,126,0.08);
     --radius: 16px;
     --radius-sm: 10px;
     --radius-pill: 50px;
@@ -42,282 +41,309 @@
     background: linear-gradient(145deg, #fff0f7 0%, #f0f5ff 50%, #fff5fb 100%);
     min-height: 100vh;
     color: var(--text);
+    overflow-x: hidden;
   }
 
-  /* Animasi Masuk Baru untuk Dyy */
-  @keyframes welcomeBounce {
-    0% { transform: translateY(30px) scale(0.8); opacity: 0; }
-    60% { transform: translateY(-10px) scale(1.05); opacity: 1; }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-  }
-
-  .welcome-dyy {
-    background: linear-gradient(135deg, #ffafbd, #ffc3a0);
-    color: white;
-    padding: 18px;
-    border-radius: var(--radius);
-    margin-bottom: 20px;
-    text-align: center;
-    box-shadow: 0 10px 20px rgba(255, 175, 189, 0.3);
-    animation: welcomeBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 2px white solid;
-  }
-
-  .welcome-dyy h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    margin-bottom: 4px;
-    color: white;
-  }
-
-  .beauty-rules {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 10px;
-    border-radius: var(--radius-sm);
-    margin-top: 12px;
-    font-size: 12px;
-    color: var(--pink-600);
+  /* ══ SPLASH SCREEN ══ */
+  #splash {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: all;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    font-weight: 600;
   }
 
-  .beauty-rules span {
-    background: var(--pink-400);
+  .splash-panel {
+    position: absolute;
+    left: 0; right: 0;
+    height: 50.5%;
+    background: linear-gradient(120deg, #ff85a1 0%, #ffb3c6 35%, #c084fc 70%, #93c5fd 100%);
+    will-change: transform;
+  }
+  .splash-panel.top    { top: 0; }
+  .splash-panel.bottom { bottom: 0; }
+
+  /* Shimmer stripe on panels */
+  .splash-panel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
+    background-size: 200% 100%;
+    animation: splashShimmer 2s linear infinite;
+  }
+  @keyframes splashShimmer {
+    from { background-position: -100% 0; }
+    to   { background-position: 200% 0; }
+  }
+
+  /* Gap line between panels */
+  .splash-panel.top    { border-bottom: 1px solid rgba(255,255,255,0.5); }
+  .splash-panel.bottom { border-top:    1px solid rgba(255,255,255,0.5); }
+
+  .splash-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
     color: white;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 10px;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  }
+  .splash-content.fade-out { opacity: 0; transform: scale(0.92); }
+
+  .splash-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(30px, 9vw, 50px);
+    font-weight: 600;
+    line-height: 1.15;
+    animation: sIn 0.6s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .splash-sub {
+    font-size: 13.5px;
+    opacity: 0.9;
+    margin-top: 8px;
+    letter-spacing: 0.3px;
+    animation: sIn 0.5s 0.25s ease both;
+  }
+  .splash-tap {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: 24px;
+    letter-spacing: 1px;
     text-transform: uppercase;
+    animation: sIn 0.4s 0.5s ease both, tapPulse 1.5s 1s ease-in-out infinite;
+  }
+  @keyframes sIn {
+    from { opacity:0; transform: translateY(14px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  @keyframes tapPulse {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 0.9; }
   }
 
-  .app-header {
-    background: white;
-    border-bottom: 1px solid var(--pink-100);
-    padding: 20px 20px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    box-shadow: 0 1px 12px rgba(212,83,126,0.07);
+  /* Dismiss: top slides up, bottom slides down */
+  #splash.dismiss .splash-panel.top    { transition: transform 0.8s cubic-bezier(0.77,0,0.175,1); transform: translateY(-100%); }
+  #splash.dismiss .splash-panel.bottom { transition: transform 0.8s cubic-bezier(0.77,0,0.175,1); transform: translateY(100%); }
+  #splash.gone { display: none; }
+
+  /* ══ FALLING FLOWERS ══ */
+  #flower-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .petal {
+    position: absolute; top: -40px; opacity: 0;
+    animation: petalFall linear infinite;
+    user-select: none;
   }
+  @keyframes petalFall {
+    0%   { transform: translateY(0) rotate(0deg) translateX(0px); opacity: 0; }
+    6%   { opacity: 0.55; }
+    50%  { transform: translateY(55vh) rotate(180deg) translateX(20px); }
+    90%  { opacity: 0.3; }
+    100% { transform: translateY(112vh) rotate(370deg) translateX(-12px); opacity: 0; }
+  }
+
+  /* ══ WELCOME CARD ══ */
+  @keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-6px); }
+  }
+  @keyframes gradShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .welcome-dyy {
+    background: linear-gradient(135deg, #ff85a1, #ffb347, #ff85c2, #c084fc);
+    background-size: 300% 300%;
+    animation: gradShift 6s ease infinite;
+    color: white;
+    padding: 20px 18px;
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    text-align: center;
+    box-shadow: 0 12px 32px rgba(255,133,161,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-dyy::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -60%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+    animation: wShimmer 3.5s linear infinite;
+    transform: skewX(-15deg);
+  }
+  @keyframes wShimmer { from { left: -60%; } to { left: 130%; } }
+
+  .welcome-dyy .float-emoji { display: inline-block; font-size: 26px; animation: floatUp 2.5s ease-in-out infinite; margin-bottom: 4px; position: relative; }
+  .welcome-dyy h2 { font-family: 'Playfair Display', serif; font-size: 20px; margin-bottom: 4px; color: white; position: relative; }
+  .welcome-dyy p  { font-size: 12.5px; opacity: 0.92; position: relative; }
+  .beauty-rules {
+    background: rgba(255,255,255,0.2);
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    margin-top: 12px;
+    font-size: 12px; color: white;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.28);
+    position: relative;
+  }
+  .beauty-rules .badge { background: rgba(255,255,255,0.28); padding: 2px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* ══ STREAK CARD ══ */
+  .streak-card { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-card); }
+  .streak-flame { font-size: 30px; animation: floatUp 2s ease-in-out infinite; line-height: 1; }
+  .streak-body { flex: 1; }
+  .streak-num { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 600; color: var(--pink-500); line-height: 1; }
+  .streak-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .streak-best { font-size: 11px; background: var(--pink-50); color: var(--pink-400); border: 1px solid var(--pink-100); border-radius: var(--radius-pill); padding: 4px 10px; font-weight: 500; white-space: nowrap; }
+
+  /* ══ SOUND CARD ══ */
+  .sound-card { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-card); }
+  .sound-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .sound-title { font-size: 13px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 6px; }
+
+  .sound-toggle { width: 38px; height: 22px; border-radius: 11px; border: none; background: var(--gray-200); cursor: pointer; position: relative; transition: background 0.25s; flex-shrink: 0; }
+  .sound-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+  .sound-toggle.on { background: linear-gradient(135deg, var(--pink-300), var(--blue-300)); }
+  .sound-toggle.on::after { transform: translateX(16px); }
+
+  .sound-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+
+  .sound-opt { padding: 10px 6px; border-radius: 10px; border: 1.5px solid var(--gray-200); background: white; cursor: pointer; text-align: center; transition: all 0.18s; -webkit-tap-highlight-color: transparent; }
+  .sound-opt:active { transform: scale(0.92); }
+  .sound-opt .s-icon { font-size: 18px; display: block; margin-bottom: 3px; }
+  .sound-opt .s-name { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+  .sound-opt.active { border-color: var(--pink-300); background: var(--pink-50); }
+  .sound-opt.active .s-name { color: var(--pink-500); }
+
+  .sound-vol { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .sound-vol label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .sound-vol input[type=range] { flex: 1; -webkit-appearance: none; height: 4px; border-radius: 2px; background: var(--pink-100); outline: none; cursor: pointer; }
+  .sound-vol input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: linear-gradient(135deg, var(--pink-300), var(--blue-300)); cursor: pointer; box-shadow: 0 1px 4px rgba(212,83,126,0.3); }
+  .sound-vol .vol-val { font-size: 11px; color: var(--pink-400); font-weight: 600; min-width: 30px; }
+
+  .btn-test-sound { width: 100%; margin-top: 10px; padding: 9px; border-radius: var(--radius-pill); border: 1.5px solid var(--pink-200); background: white; color: var(--pink-500); font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .btn-test-sound:hover { background: var(--pink-50); }
+  .btn-test-sound:active { transform: scale(0.97); }
+
+  /* ══ WATER CARD ══ */
+  .water-card { background: white; border: 1px solid var(--blue-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-card); }
+  .water-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .water-title { font-size: 13px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 6px; }
+  .water-count { font-size: 12px; color: var(--blue-400); font-weight: 600; }
+  .water-glasses { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .glass-btn { width: 34px; height: 38px; border: 1.5px solid var(--blue-200); border-radius: 6px 6px 8px 8px; background: white; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; font-size: 15px; transition: all 0.2s; position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+  .glass-btn::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 0%; background: linear-gradient(to top, var(--blue-200), var(--blue-100)); transition: height 0.35s cubic-bezier(0.34,1.56,0.64,1); border-radius: 0 0 6px 6px; }
+  .glass-btn.filled::before { height: 70%; }
+  .glass-btn.filled { border-color: var(--blue-300); }
+  .glass-btn:active { transform: scale(0.88); }
+  .glass-icon { position: relative; z-index: 1; font-size: 14px; }
+
+  /* ══ MOOD CARD ══ */
+  .mood-card { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; box-shadow: var(--shadow-card); }
+  .mood-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .mood-row { display: flex; gap: 8px; justify-content: center; }
+  .mood-btn { width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--gray-200); background: white; cursor: pointer; font-size: 22px; display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1); -webkit-tap-highlight-color: transparent; line-height: 1; }
+  .mood-btn:hover { transform: scale(1.15); }
+  .mood-btn:active { transform: scale(0.95); }
+  .mood-btn.selected { border-color: var(--pink-300); background: var(--pink-50); transform: scale(1.2); box-shadow: 0 4px 12px rgba(212,83,126,0.2); }
+  .mood-label { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 6px; min-height: 16px; transition: all 0.2s; }
+
+  /* ══ HEADER ══ */
+  .app-header { background: white; border-bottom: 1px solid var(--pink-100); padding: 20px 20px 16px; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 12px rgba(212,83,126,0.07); }
   .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .app-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 600; color: var(--pink-500); }
-  .date-chip {
-    background: var(--pink-50);
-    border: 1px solid var(--pink-100);
-    border-radius: var(--radius-pill);
-    padding: 5px 14px;
-    font-size: 12px;
-    color: var(--pink-400);
-    font-weight: 500;
-  }
+  .date-chip { background: var(--pink-50); border: 1px solid var(--pink-100); border-radius: var(--radius-pill); padding: 5px 14px; font-size: 12px; color: var(--pink-400); font-weight: 500; }
   .progress-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
   .progress-meta .prog-pct { font-weight: 600; color: var(--pink-400); }
-  .progress-track {
-    background: var(--pink-50);
-    border-radius: 99px;
-    height: 6px;
-    overflow: hidden;
-    border: 1px solid var(--pink-100);
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 99px;
-    background: linear-gradient(90deg, var(--pink-300), var(--blue-300));
-    transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
-    min-width: 0%;
-  }
+  .progress-track { background: var(--pink-50); border-radius: 99px; height: 6px; overflow: hidden; border: 1px solid var(--pink-100); }
+  .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--pink-300), var(--blue-300)); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
   .motivasi-text { font-size: 12px; color: var(--text-muted); margin-top: 6px; min-height: 18px; }
 
-  .main { max-width: 480px; margin: 0 auto; padding: 16px 16px 120px; }
+  .main { max-width: 480px; margin: 0 auto; padding: 16px 16px 120px; position: relative; z-index: 1; }
 
+  /* ══ TASKS ══ */
   .section { margin-bottom: 8px; }
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 4px 8px;
-  }
+  .section-header { display: flex; align-items: center; gap: 8px; padding: 14px 4px 8px; }
   .section-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .section-dot.pink { background: var(--pink-300); }
   .section-dot.blue { background: var(--blue-300); }
   .section-label { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); }
   .section-count { margin-left: auto; font-size: 11px; color: var(--text-muted); }
 
-  .task-card {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: white;
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius);
-    padding: 13px 14px;
-    margin-bottom: 7px;
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s, transform 0.15s;
-    box-shadow: var(--shadow-card);
-    -webkit-tap-highlight-color: transparent;
-  }
+  .task-card { display: flex; align-items: center; gap: 12px; background: white; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 13px 14px; margin-bottom: 7px; cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; box-shadow: var(--shadow-card); -webkit-tap-highlight-color: transparent; }
   .task-card:active { transform: scale(0.98); }
   .task-card:hover { border-color: var(--pink-200); }
-  .task-card.done {
-    background: linear-gradient(135deg, rgba(253,240,245,0.6), rgba(238,245,252,0.6));
-    border-color: var(--blue-100);
-  }
+  .task-card.done { background: linear-gradient(135deg, rgba(253,240,245,0.6), rgba(238,245,252,0.6)); border-color: var(--blue-100); }
   .task-card.done .task-name { text-decoration: line-through; color: var(--text-muted); }
 
-  .check-btn {
-    width: 24px; height: 24px; border-radius: 50%;
-    border: 1.5px solid var(--gray-200);
-    background: white;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.25s;
-    position: relative;
-  }
-  .task-card.done .check-btn {
-    background: linear-gradient(135deg, var(--pink-300), var(--blue-300));
-    border-color: transparent;
-  }
-  .check-btn::after {
-    content: '';
-    width: 5px; height: 9px;
-    border: 2px solid white;
-    border-top: none; border-left: none;
-    transform: rotate(45deg) translate(-1px, -1px);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
+  .check-btn { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--gray-200); background: white; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.25s; position: relative; }
+  .task-card.done .check-btn { background: linear-gradient(135deg, var(--pink-300), var(--blue-300)); border-color: transparent; }
+  .check-btn::after { content: ''; width: 5px; height: 9px; border: 2px solid white; border-top: none; border-left: none; transform: rotate(45deg) translate(-1px, -1px); opacity: 0; transition: opacity 0.2s; }
   .task-card.done .check-btn::after { opacity: 1; }
 
-  .task-icon {
-    width: 36px; height: 36px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-  }
+  .task-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
   .task-icon.pink { background: var(--pink-50); }
   .task-icon.blue { background: var(--blue-50); }
-
   .task-body { flex: 1; min-width: 0; }
   .task-name { font-size: 14px; font-weight: 400; color: var(--text); line-height: 1.3; }
-  .task-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+  .task-sub  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 
-  .notif-panel {
-    background: white;
-    border: 1px solid var(--pink-100);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-top: 8px;
-    box-shadow: var(--shadow-soft);
-  }
+  /* ══ NOTIF PANEL ══ */
+  .notif-panel { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 16px; margin-top: 8px; box-shadow: var(--shadow-soft); }
   .notif-panel-title { font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-
   .notif-schedule { list-style: none; margin-bottom: 14px; }
-  .notif-schedule li {
-    display: flex; align-items: center; gap: 10px;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 13px; color: var(--text-muted);
-  }
+  .notif-schedule li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--gray-100); font-size: 13px; color: var(--text-muted); }
   .notif-schedule li:last-child { border-bottom: none; }
   .notif-time { font-weight: 600; color: var(--pink-400); min-width: 44px; font-size: 12px; }
 
-  .auto-reset-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, var(--pink-50), var(--blue-50));
-    border: 1px solid var(--pink-100);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    margin-bottom: 14px;
-    font-size: 12px;
-    color: var(--pink-500);
-  }
+  .auto-reset-badge { display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, var(--pink-50), var(--blue-50)); border: 1px solid var(--pink-100); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 14px; font-size: 12px; color: var(--pink-500); }
   .auto-reset-badge span.label { font-weight: 500; }
   .auto-reset-badge span.sub { color: var(--text-muted); font-size: 11px; margin-left: auto; }
 
-  .btn-notif {
-    width: 100%;
-    padding: 13px;
-    border-radius: var(--radius-pill);
-    border: 1.5px solid var(--pink-200);
-    background: white;
-    color: var(--pink-500);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px; font-weight: 500;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: all 0.2s;
-  }
+  .btn-notif { width: 100%; padding: 13px; border-radius: var(--radius-pill); border: 1.5px solid var(--pink-200); background: white; color: var(--pink-500); font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
   .btn-notif:hover { background: var(--pink-50); }
-  .btn-notif.active {
-    background: linear-gradient(135deg, var(--pink-100), var(--blue-100));
-    border-color: var(--blue-200);
-    color: var(--blue-600);
-  }
-
-  .btn-reset {
-    width: 100%; margin-top: 10px;
-    padding: 11px;
-    border-radius: var(--radius-pill);
-    border: 1px solid var(--gray-200);
-    background: white;
-    color: var(--gray-400);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px; cursor: pointer;
-    transition: all 0.2s;
-  }
+  .btn-notif.active { background: linear-gradient(135deg, var(--pink-100), var(--blue-100)); border-color: var(--blue-200); color: var(--blue-600); }
+  .btn-reset { width: 100%; margin-top: 10px; padding: 11px; border-radius: var(--radius-pill); border: 1px solid var(--gray-200); background: white; color: var(--gray-400); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
   .btn-reset:hover { border-color: var(--pink-200); color: var(--pink-400); }
+  .countdown-text { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 8px; min-height: 16px; }
 
-  .countdown-text {
-    font-size: 11px;
-    color: var(--text-muted);
-    text-align: center;
-    margin-top: 8px;
-    min-height: 16px;
-  }
-
-  .toast-container {
-    position: fixed; bottom: 24px; left: 0; right: 0;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 8px; pointer-events: none; z-index: 999;
-  }
-  .toast {
-    background: white;
-    border: 1px solid var(--pink-100);
-    border-radius: var(--radius-pill);
-    padding: 10px 20px;
-    font-size: 13px; font-weight: 500;
-    color: var(--pink-500);
-    box-shadow: 0 4px 20px rgba(212,83,126,0.15);
-    animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
-    pointer-events: none;
-  }
-  .toast.out { animation: toastOut 0.25s ease forwards; }
-  @keyframes toastIn { from { opacity:0; transform: translateY(16px) scale(0.92); } to { opacity:1; transform: translateY(0) scale(1); } }
-  @keyframes toastOut { from { opacity:1; transform: translateY(0); } to { opacity:0; transform: translateY(8px); } }
-
-  .all-done-banner {
-    background: linear-gradient(135deg, var(--pink-50), var(--blue-50));
-    border: 1px solid var(--pink-100);
-    border-radius: var(--radius);
-    padding: 20px;
-    text-align: center;
-    margin-bottom: 16px;
-    display: none;
-  }
+  /* ══ ALL DONE + TOAST ══ */
+  .all-done-banner { background: linear-gradient(135deg, var(--pink-50), var(--blue-50)); border: 1px solid var(--pink-100); border-radius: var(--radius); padding: 20px; text-align: center; margin-bottom: 16px; display: none; }
   .all-done-banner.show { display: block; animation: toastIn 0.4s ease; }
   .all-done-banner .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
   .all-done-banner h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--pink-500); margin-bottom: 4px; }
   .all-done-banner p { font-size: 13px; color: var(--text-muted); }
+
+  .toast-container { position: fixed; bottom: 24px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; z-index: 999; }
+  .toast { background: white; border: 1px solid var(--pink-100); border-radius: var(--radius-pill); padding: 10px 20px; font-size: 13px; font-weight: 500; color: var(--pink-500); box-shadow: 0 4px 20px rgba(212,83,126,0.15); animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; pointer-events: none; }
+  .toast.out { animation: toastOut 0.25s ease forwards; }
+  @keyframes toastIn { from { opacity:0; transform: translateY(16px) scale(0.92); } to { opacity:1; transform: translateY(0) scale(1); } }
+  @keyframes toastOut { from { opacity:1; } to { opacity:0; transform: translateY(8px); } }
 </style>
 </head>
 <body>
 
-<header class="app-header" style="max-width:480px; margin:0 auto;">
+<div id="splash">
+  <div class="splash-panel top"></div>
+  <div class="splash-panel bottom"></div>
+  <div class="splash-content" id="splash-content">
+    <div class="splash-title">Rutinku 🌸<br><em>Dyy Edition</em></div>
+    <div class="splash-sub">Consistency is your glow up ✨</div>
+    <div class="splash-tap">Tap untuk mulai</div>
+  </div>
+</div>
+
+<div id="flower-canvas"></div>
+
+<header class="app-header" style="max-width:480px;margin:0 auto;">
   <div class="header-top">
     <div class="app-title">Rutinku 🌸</div>
     <div class="date-chip" id="date-chip">—</div>
@@ -336,18 +362,57 @@
 
 <main class="main">
   <div class="welcome-dyy">
-    <h2>Semangat Cantik, Dyy! ✨</h2>
-    <p style="font-size: 13px; opacity: 0.9;">Consistency is the key to your glow up.</p>
-    
+    <div class="float-emoji">✨</div>
+    <h2>Semangat Cantik, Dyy!</h2>
+    <p>Consistency is the key to your glow up 🌸</p>
     <div class="beauty-rules">
-      <span>Golden Rules</span> 🚫 No Sugar • 🚫 No Junkfood
+      <span class="badge">Golden Rules</span>
+      🚫 No Sugar &nbsp;•&nbsp; 🚫 No Junkfood
     </div>
+  </div>
+
+  <div class="streak-card">
+    <div class="streak-flame">🔥</div>
+    <div class="streak-body">
+      <div class="streak-num" id="streak-num">0</div>
+      <div class="streak-label">Hari berturut-turut selesai semua!</div>
+    </div>
+    <div class="streak-best" id="streak-best">Rekor: 0 hari</div>
+  </div>
+
+  <!-- SOUND PICKER -->
+  <div class="sound-card">
+    <div class="sound-header">
+      <div class="sound-title">🎵 Suara Interaksi</div>
+      <button class="sound-toggle" id="sound-toggle" onclick="toggleSound()"></button>
+    </div>
+    <div class="sound-options" id="sound-options"></div>
+    <div class="sound-vol">
+      <label>Volume</label>
+      <input type="range" id="vol-slider" min="0" max="100" value="60" oninput="updateVolume(this.value)">
+      <span class="vol-val" id="vol-val">60%</span>
+    </div>
+    <button class="btn-test-sound" onclick="testCurrentSound()">▶ Preview suara</button>
+  </div>
+
+  <div class="water-card">
+    <div class="water-header">
+      <div class="water-title">💧 Minum Air Hari Ini</div>
+      <div class="water-count" id="water-count">0 / 8 gelas</div>
+    </div>
+    <div class="water-glasses" id="water-glasses"></div>
+  </div>
+
+  <div class="mood-card">
+    <div class="mood-title">🌈 Mood kamu hari ini?</div>
+    <div class="mood-row" id="mood-row"></div>
+    <div class="mood-label" id="mood-label"></div>
   </div>
 
   <div class="all-done-banner" id="all-done">
     <span class="emoji">🌺</span>
     <h3>Semua selesai!</h3>
-    <p id="all-done-text">Kamu luar biasa hari ini, Dyy. Selamat beristirahat 💕</p>
+    <p>Kamu luar biasa hari ini, Dyy. Selamat beristirahat 💕</p>
   </div>
 
   <div class="section">
@@ -358,7 +423,6 @@
     </div>
     <div id="group-pagi"></div>
   </div>
-
   <div class="section">
     <div class="section-header">
       <div class="section-dot blue"></div>
@@ -367,7 +431,6 @@
     </div>
     <div id="group-siang"></div>
   </div>
-
   <div class="section">
     <div class="section-header">
       <div class="section-dot pink"></div>
@@ -379,13 +442,11 @@
 
   <div class="notif-panel">
     <div class="notif-panel-title">🔔 Pengingat Otomatis</div>
-
     <div class="auto-reset-badge">
       <span>🌙</span>
       <span class="label">Reset otomatis setiap tengah malam WIB</span>
       <span class="sub" id="countdown-badge">—</span>
     </div>
-
     <ul class="notif-schedule">
       <li><span class="notif-time">05.30</span> Waktunya bangun & minum air!</li>
       <li><span class="notif-time">06.00</span> Cuci muka, sikat gigi, sarapan</li>
@@ -402,7 +463,7 @@
       <span id="notif-icon">🔔</span>
       <span id="notif-label">Aktifkan Notifikasi</span>
     </button>
-    <div id="notif-status" style="font-size:12px; color:var(--text-muted); text-align:center; margin-top:8px; min-height:16px;"></div>
+    <div id="notif-status" style="font-size:12px;color:var(--text-muted);text-align:center;margin-top:8px;min-height:16px;"></div>
     <button class="btn-reset" onclick="resetAll()">🔄 Reset progress hari ini</button>
     <div class="countdown-text" id="countdown-text"></div>
   </div>
@@ -411,326 +472,436 @@
 <div class="toast-container" id="toast-container"></div>
 
 <script>
-// ── CONSTANTS ──────────────────────────────────────────────
-const STORAGE_KEY_DONE    = 'rutinku_done';
-const STORAGE_KEY_DATE    = 'rutinku_date';
-const STORAGE_KEY_NOTIF   = 'rutinku_notif';
-const STORAGE_KEY_FIRED   = 'rutinku_fired';
+// ── STORAGE KEYS ──
+const SK = { DONE:'rutinku_done', DATE:'rutinku_date', NOTIF:'rutinku_notif', FIRED:'rutinku_fired', WATER:'rutinku_water', MOOD:'rutinku_mood', STREAK:'rutinku_streak', BEST:'rutinku_best', LASTWIN:'rutinku_lastwin', SOUND:'rutinku_sound', VOL:'rutinku_vol', SOUNDON:'rutinku_soundon' };
 
+// ── TASKS ──
 const TASKS = {
-  pagi: [
-    { id:'p0', icon:'💧', color:'pink', name:'Minum air putih', sub:'Segelas besar setelah bangun' },
-    { id:'p1', icon:'🪥', color:'pink', name:'Cuci muka & sikat gigi', sub:'Bersih dan segar!' },
-    { id:'p2', icon:'🍌', color:'pink', name:'Sarapan buah / roti gandum', sub:'Tanpa gula tambahan' },
-    { id:'p3', icon:'✨', color:'pink', name:'Minum collagen', sub:'Setelah sarapan' },
-    { id:'p4', icon:'🏃', color:'blue', name:'Olahraga sebentar', sub:'15–30 menit sudah cukup' },
-    { id:'p5', icon:'🫧', color:'blue', name:'Scrub', sub:'Sebelum mandi' },
-    { id:'p6', icon:'🚿', color:'blue', name:'Mandi pagi', sub:'Segar dan bersemangat!' },
-    { id:'p7', icon:'🌸', color:'pink', name:'Skincare & bodycare', sub:'Setelah mandi pagi' },
+  pagi:[
+    {id:'p0',icon:'💧',color:'pink',name:'Minum air putih',sub:'Segelas besar setelah bangun'},
+    {id:'p1',icon:'🪥',color:'pink',name:'Cuci muka & sikat gigi',sub:'Bersih dan segar!'},
+    {id:'p2',icon:'🍌',color:'pink',name:'Sarapan buah / roti gandum',sub:'Tanpa gula tambahan'},
+    {id:'p3',icon:'✨',color:'pink',name:'Minum collagen',sub:'Setelah sarapan'},
+    {id:'p4',icon:'🏃',color:'blue',name:'Olahraga sebentar',sub:'15–30 menit sudah cukup'},
+    {id:'p5',icon:'🫧',color:'blue',name:'Scrub',sub:'Sebelum mandi'},
+    {id:'p6',icon:'🚿',color:'blue',name:'Mandi pagi',sub:'Segar dan bersemangat!'},
+    {id:'p7',icon:'🌸',color:'pink',name:'Skincare & bodycare',sub:'Setelah mandi pagi'},
   ],
-  siang: [
-    { id:'s0', icon:'🍱', color:'blue', name:'Makan siang secukupnya', sub:'Sekitar jam 12.00' },
-    { id:'s1', icon:'😴', color:'blue', name:'Istirahat / tidur siang', sub:'Isi energi untuk sore' },
+  siang:[
+    {id:'s0',icon:'🍱',color:'blue',name:'Makan siang secukupnya',sub:'Sekitar jam 12.00'},
+    {id:'s1',icon:'😴',color:'blue',name:'Istirahat / tidur siang',sub:'Isi energi untuk sore'},
   ],
-  malam: [
-    { id:'m0', icon:'🛁', color:'blue', name:'Mandi malam (jangan cuci rambut)', sub:'Tanpa keramas' },
-    { id:'m1', icon:'💆', color:'pink', name:'Pakai vitamin rambut', sub:'Setelah mandi malam' },
-    { id:'m2', icon:'🌙', color:'pink', name:'Skincare malam', sub:'Jangan di-skip!' },
-    { id:'m3', icon:'🧴', color:'pink', name:'Bodycare malam', sub:'Kulit halus & lembut' },
-    { id:'m4', icon:'☕', color:'blue', name:'Minum kitfee & natur-E', sub:'Suplemen malam hari' },
-    { id:'m5', icon:'🪥', color:'pink', name:'Sikat gigi & bobo', sub:'Selamat beristirahat 💕' },
+  malam:[
+    {id:'m0',icon:'🛁',color:'blue',name:'Mandi malam (jangan cuci rambut)',sub:'Tanpa keramas'},
+    {id:'m1',icon:'💆',color:'pink',name:'Pakai vitamin rambut',sub:'Setelah mandi malam'},
+    {id:'m2',icon:'🌙',color:'pink',name:'Skincare malam',sub:'Jangan di-skip!'},
+    {id:'m3',icon:'🧴',color:'pink',name:'Bodycare malam',sub:'Kulit halus & lembut'},
+    {id:'m4',icon:'☕',color:'blue',name:'Minum kitfee & natur-E',sub:'Suplemen malam hari'},
+    {id:'m5',icon:'🪥',color:'pink',name:'Sikat gigi & bobo',sub:'Selamat beristirahat 💕'},
   ]
 };
 
-const MOTIVASI = [
-  'Yuk mulai harumu, Dyy! ✨',
-  'Dyy hebat! Terus semangat! 🌸',
-  'Setengah jalan, Dyy keren! 💪',
-  'Dyy hampir selesai, ayo! 🌺',
-  'SEMPURNA! Dyy luar biasa! 🎉'
-];
-
+const MOTIVASI = ['Yuk mulai harimu, Dyy! ✨','Dyy hebat! Terus semangat! 🌸','Setengah jalan, Dyy keren! 💪','Dyy hampir selesai, ayo! 🌺','SEMPURNA! Dyy luar biasa! 🎉'];
 const NOTIF_SCHEDULE = [
-  { h:5,  m:30, msg:'💧 Waktunya bangun & minum air putih!' },
-  { h:6,  m:0,  msg:'🪥 Cuci muka, sikat gigi, dan sarapan ya!' },
-  { h:7,  m:0,  msg:'✨ Jangan lupa minum collagen!' },
-  { h:7,  m:30, msg:'🏃 Ayo olahraga sebentar!' },
-  { h:8,  m:30, msg:'🚿 Saatnya scrub, mandi, & skincare pagi!' },
-  { h:12, m:0,  msg:'🍱 Waktunya makan siang & istirahat!' },
-  { h:19, m:0,  msg:'🛁 Jangan lupa mandi malam & vitamin rambut!' },
-  { h:20, m:0,  msg:'🌙 Skincare & bodycare malam yuk!' },
-  { h:21, m:0,  msg:'☕ Minum kitfee & natur-E dulu!' },
-  { h:22, m:0,  msg:'🪥 Sikat gigi & bersiap bobo ya!' },
+  {h:5,m:30,msg:'💧 Waktunya bangun & minum air putih!'},{h:6,m:0,msg:'🪥 Cuci muka, sikat gigi, dan sarapan ya!'},
+  {h:7,m:0,msg:'✨ Jangan lupa minum collagen!'},{h:7,m:30,msg:'🏃 Ayo olahraga sebentar!'},
+  {h:8,m:30,msg:'🚿 Saatnya scrub, mandi, & skincare pagi!'},{h:12,m:0,msg:'🍱 Waktunya makan siang & istirahat!'},
+  {h:19,m:0,msg:'🛁 Jangan lupa mandi malam & vitamin rambut!'},{h:20,m:0,msg:'🌙 Skincare & bodycare malam yuk!'},
+  {h:21,m:0,msg:'☕ Minum kitfee & natur-E dulu!'},{h:22,m:0,msg:'🪥 Sikat gigi & bersiap bobo ya!'},
+];
+const MOODS = [{emoji:'😄',label:'Semangat banget!'},{emoji:'🙂',label:'Lumayan baik'},{emoji:'😐',label:'Biasa aja'},{emoji:'😔',label:'Lagi kurang mood'},{emoji:'😴',label:'Ngantuk banget'}];
+const SOUND_TYPES = [
+  {id:'pop',icon:'🫧',name:'Pop'},{id:'chime',icon:'🔔',name:'Chime'},
+  {id:'soft',icon:'🌊',name:'Soft'},{id:'click',icon:'🖱️',name:'Click'},
+  {id:'sparkle',icon:'✨',name:'Sparkle'},{id:'ding',icon:'🎵',name:'Ding'},
 ];
 
-// ── STATE ──────────────────────────────────────────────
-let done = new Set();
-let notifOn = false;
-let tickInterval = null;
-let firedToday = new Set();
+// ── STATE ──
+let done=new Set(), notifOn=false, tickInterval=null, firedToday=new Set();
+let waterCount=0, moodToday=null, streak=0, bestStreak=0;
+let audioCtx=null, soundOn=true, currentSound='chime', volume=0.6;
+const TOTAL=16;
 
-// ── DATE HELPERS (WIB = UTC+7) ──────────────────────────────────────────────
+// ── WIB HELPERS ──
 function getWIBDate() {
-  const now = new Date();
-  const wibOffset = 7 * 60;
-  const localOffset = -now.getTimezoneOffset();
-  const diffMs = (wibOffset - localOffset) * 60 * 1000;
-  const wib = new Date(now.getTime() + diffMs);
-  return wib.toISOString().slice(0, 10);
+  const now=new Date(), d=(7*60+now.getTimezoneOffset())*60000;
+  return new Date(now.getTime()+d).toISOString().slice(0,10);
 }
-
 function getWIBNow() {
-  const now = new Date();
-  const wibOffset = 7 * 60;
-  const localOffset = -now.getTimezoneOffset();
-  const diffMs = (wibOffset - localOffset) * 60 * 1000;
-  return new Date(now.getTime() + diffMs);
+  const now=new Date(), d=(7*60+now.getTimezoneOffset())*60000;
+  return new Date(now.getTime()+d);
 }
 
-// ── STORAGE ──────────────────────────────────────────────
+// ── AUDIO ──
+function getCtx() {
+  if (!audioCtx) audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if (audioCtx.state==='suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+function playSound(type, vol) {
+  if (!soundOn) return;
+  const ctx=getCtx(), v=vol!==undefined?vol:volume, now=ctx.currentTime;
+
+  const mk=(freq,type2,start,dur,gainPeak,freqEnd)=>{
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type=type2||'sine'; o.frequency.value=freq;
+    if(freqEnd) o.frequency.exponentialRampToValueAtTime(freqEnd,start+dur);
+    g.gain.setValueAtTime(0,start);
+    g.gain.linearRampToValueAtTime(gainPeak,start+0.01);
+    g.gain.exponentialRampToValueAtTime(0.001,start+dur);
+    o.start(start); o.stop(start+dur+0.05);
+  };
+
+  if(type==='pop') { mk(600,'sine',now,0.14,v*0.5,200); }
+  else if(type==='chime') { [523,659,784].forEach((f,i)=>mk(f,'sine',now+i*0.09,0.5,v*0.38)); }
+  else if(type==='soft') { mk(440,'sine',now,0.4,v*0.32,480); }
+  else if(type==='click') {
+    const buf=ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);
+    const data=buf.getChannelData(0);
+    for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.exp(-i/80);
+    const src=ctx.createBufferSource(); src.buffer=buf;
+    const filt=ctx.createBiquadFilter(); filt.type='highpass'; filt.frequency.value=1200;
+    const g=ctx.createGain(); src.connect(filt); filt.connect(g); g.connect(ctx.destination);
+    g.gain.setValueAtTime(v*0.9,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.06);
+    src.start(now); src.stop(now+0.07);
+  }
+  else if(type==='sparkle') { [880,1108,1318,1760].forEach((f,i)=>mk(f,'triangle',now+i*0.06,0.28,v*0.22)); }
+  else if(type==='ding') { mk(1047,'sine',now,0.38,v*0.48,900); }
+}
+
+function playUndoSound() {
+  if(!soundOn) return;
+  const ctx=getCtx(), now=ctx.currentTime;
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  o.type='sine'; o.frequency.setValueAtTime(480,now); o.frequency.exponentialRampToValueAtTime(280,now+0.18);
+  g.gain.setValueAtTime(volume*0.3,now); g.gain.exponentialRampToValueAtTime(0.001,now+0.2);
+  o.start(now); o.stop(now+0.22);
+}
+
+function playWaterSound() {
+  if(!soundOn) return;
+  const ctx=getCtx(), now=ctx.currentTime;
+  [420,520,640].forEach((f,i)=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type='sine'; o.frequency.value=f; const t=now+i*0.055;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(volume*0.22,t+0.01); g.gain.exponentialRampToValueAtTime(0.001,t+0.2);
+    o.start(t); o.stop(t+0.22);
+  });
+}
+
+function playAllDoneSound() {
+  if(!soundOn) return;
+  const ctx=getCtx(), now=ctx.currentTime;
+  [523,659,784,1047].forEach((f,i)=>{
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type='sine'; o.frequency.value=f; const t=now+i*0.13;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(volume*0.5,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+0.65);
+    o.start(t); o.stop(t+0.7);
+  });
+}
+
+function renderSoundOptions() {
+  const el=document.getElementById('sound-options');
+  el.innerHTML='';
+  SOUND_TYPES.forEach(s=>{
+    const btn=document.createElement('button');
+    btn.className='sound-opt'+(currentSound===s.id?' active':'');
+    btn.innerHTML=`<span class="s-icon">${s.icon}</span><span class="s-name">${s.name}</span>`;
+    btn.onclick=()=>selectSound(s.id);
+    el.appendChild(btn);
+  });
+  document.getElementById('sound-toggle').classList.toggle('on',soundOn);
+}
+
+function selectSound(id) {
+  currentSound=id;
+  try{localStorage.setItem(SK.SOUND,id);}catch(e){}
+  renderSoundOptions();
+  playSound(id);
+}
+
+function toggleSound() {
+  soundOn=!soundOn;
+  document.getElementById('sound-toggle').classList.toggle('on',soundOn);
+  try{localStorage.setItem(SK.SOUNDON,soundOn?'1':'0');}catch(e){}
+  if(soundOn){showToast('🎵 Suara aktif');playSound(currentSound);}
+  else showToast('🔇 Suara dimatikan');
+}
+
+function updateVolume(val) {
+  volume=val/100;
+  document.getElementById('vol-val').textContent=val+'%';
+  try{localStorage.setItem(SK.VOL,val);}catch(e){}
+}
+
+function testCurrentSound(){ playSound(currentSound,volume); }
+
+// ── STORAGE ──
 function saveState() {
   try {
-    localStorage.setItem(STORAGE_KEY_DONE, JSON.stringify([...done]));
-    localStorage.setItem(STORAGE_KEY_DATE, getWIBDate());
-    localStorage.setItem(STORAGE_KEY_FIRED, JSON.stringify([...firedToday]));
-  } catch(e) {}
+    localStorage.setItem(SK.DONE,  JSON.stringify([...done]));
+    localStorage.setItem(SK.DATE,  getWIBDate());
+    localStorage.setItem(SK.FIRED, JSON.stringify([...firedToday]));
+    localStorage.setItem(SK.WATER, String(waterCount));
+    localStorage.setItem(SK.MOOD,  moodToday!==null?String(moodToday):'');
+    localStorage.setItem(SK.STREAK,String(streak));
+    localStorage.setItem(SK.BEST,  String(bestStreak));
+  } catch(e){}
 }
 
 function loadState() {
   try {
-    const savedDate = localStorage.getItem(STORAGE_KEY_DATE);
-    const todayWIB  = getWIBDate();
-
-    if (savedDate === todayWIB) {
-      const savedDone = localStorage.getItem(STORAGE_KEY_DONE);
-      if (savedDone) done = new Set(JSON.parse(savedDone));
-      const savedFired = localStorage.getItem(STORAGE_KEY_FIRED);
-      if (savedFired) firedToday = new Set(JSON.parse(savedFired));
+    const savedDate=localStorage.getItem(SK.DATE), today=getWIBDate();
+    if(savedDate===today) {
+      const sd=localStorage.getItem(SK.DONE); if(sd) done=new Set(JSON.parse(sd));
+      const sf=localStorage.getItem(SK.FIRED); if(sf) firedToday=new Set(JSON.parse(sf));
+      waterCount=parseInt(localStorage.getItem(SK.WATER)||'0');
+      const sm=localStorage.getItem(SK.MOOD); moodToday=(sm!==null&&sm!=='')?parseInt(sm):null;
     } else {
-      done.clear();
-      firedToday.clear();
-      saveState();
+      const lw=localStorage.getItem(SK.LASTWIN);
+      const yd=new Date(getWIBNow()); yd.setUTCDate(yd.getUTCDate()-1);
+      streak=(lw===yd.toISOString().slice(0,10))?parseInt(localStorage.getItem(SK.STREAK)||'0'):0;
+      done.clear();firedToday.clear();waterCount=0;moodToday=null;saveState();
     }
-
-    const savedNotif = localStorage.getItem(STORAGE_KEY_NOTIF);
-    if (savedNotif === 'true') {
-      if ('Notification' in window && Notification.permission === 'granted') {
-        startNotif(true);
-      }
-    }
-  } catch(e) {}
+    streak=parseInt(localStorage.getItem(SK.STREAK)||'0');
+    bestStreak=parseInt(localStorage.getItem(SK.BEST)||'0');
+    const ss=localStorage.getItem(SK.SOUND); if(ss) currentSound=ss;
+    const sv=localStorage.getItem(SK.VOL);
+    if(sv){volume=parseInt(sv)/100;document.getElementById('vol-slider').value=sv;document.getElementById('vol-val').textContent=sv+'%';}
+    const so=localStorage.getItem(SK.SOUNDON); if(so!==null) soundOn=so==='1';
+    const sn=localStorage.getItem(SK.NOTIF);
+    if(sn==='true'&&'Notification'in window&&Notification.permission==='granted') startNotif(true);
+  } catch(e){}
 }
 
-// ── RENDER ──────────────────────────────────────────────
-function renderGroup(group, containerId) {
-  const el = document.getElementById(containerId);
-  el.innerHTML = '';
-  TASKS[group].forEach(t => {
-    const card = document.createElement('div');
-    card.className = 'task-card' + (done.has(t.id) ? ' done' : '');
-    card.dataset.id = t.id;
-    card.innerHTML = `
-      <div class="check-btn"></div>
-      <div class="task-icon ${t.color}">${t.icon}</div>
-      <div class="task-body">
-        <div class="task-name">${t.name}</div>
-        <div class="task-sub">${t.sub}</div>
-      </div>`;
-    card.addEventListener('click', () => toggleTask(t.id, t.name));
+// ── SPLASH ──
+function initSplash() {
+  const splash=document.getElementById('splash'), sc=document.getElementById('splash-content');
+  function dismiss() {
+    sc.classList.add('fade-out');
+    setTimeout(()=>{
+      splash.classList.add('dismiss');
+      setTimeout(()=>splash.classList.add('gone'), 900);
+    }, 180);
+  }
+  splash.addEventListener('click', dismiss);
+  setTimeout(dismiss, 2000);
+}
+
+// ── FLOWERS ──
+function initFlowers() {
+  const cv=document.getElementById('flower-canvas');
+  const petals=['🌸','🌺','🌷','✿','🩷'];
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');
+    p.className='petal';
+    p.textContent=petals[Math.floor(Math.random()*petals.length)];
+    const left=Math.random()*100, dur=9+Math.random()*12, delay=Math.random()*18, size=11+Math.random()*10;
+    p.style.cssText=`left:${left}%;font-size:${size}px;animation-duration:${dur}s;animation-delay:${delay}s;`;
+    cv.appendChild(p);
+  }
+}
+
+// ── WATER ──
+function renderWater() {
+  const c=document.getElementById('water-glasses'); c.innerHTML='';
+  for(let i=0;i<8;i++){
+    const btn=document.createElement('button');
+    btn.className='glass-btn'+(i<waterCount?' filled':'');
+    btn.innerHTML='<span class="glass-icon">💧</span>';
+    btn.onclick=()=>toggleWater(i);
+    c.appendChild(btn);
+  }
+  document.getElementById('water-count').textContent=waterCount+' / 8 gelas';
+}
+function toggleWater(idx) {
+  waterCount=idx<waterCount?idx:idx+1;
+  playWaterSound();
+  renderWater(); saveState();
+  if(waterCount===8){showToast('💧 Target minum air tercapai! 🎉');playAllDoneSound();}
+}
+
+// ── MOOD ──
+function renderMood() {
+  const row=document.getElementById('mood-row'); row.innerHTML='';
+  MOODS.forEach((m,i)=>{
+    const btn=document.createElement('button');
+    btn.className='mood-btn'+(moodToday===i?' selected':'');
+    btn.textContent=m.emoji;
+    btn.onclick=()=>selectMood(i);
+    row.appendChild(btn);
+  });
+  document.getElementById('mood-label').textContent=moodToday!==null?MOODS[moodToday].label:'Pilih mood kamu...';
+}
+function selectMood(i) {
+  moodToday=(moodToday===i)?null:i;
+  playSound('soft'); renderMood(); saveState();
+  if(moodToday!==null) showToast(MOODS[moodToday].emoji+' '+MOODS[moodToday].label);
+}
+
+// ── STREAK ──
+function updateStreakUI() {
+  document.getElementById('streak-num').textContent=streak;
+  document.getElementById('streak-best').textContent='Rekor: '+bestStreak+' hari';
+}
+function checkStreakOnComplete() {
+  if(done.size===TOTAL){
+    const today=getWIBDate(), lw=localStorage.getItem(SK.LASTWIN);
+    if(lw!==today){
+      streak++;
+      localStorage.setItem(SK.LASTWIN,today);
+      if(streak>bestStreak){bestStreak=streak;showToast('🏆 Rekor baru! '+bestStreak+' hari!');}
+      else showToast('🔥 Streak '+streak+' hari! Dyy konsisten!');
+      playAllDoneSound(); saveState(); updateStreakUI();
+    }
+  }
+}
+
+// ── RENDER TASKS ──
+function renderGroup(group, cid) {
+  const el=document.getElementById(cid); el.innerHTML='';
+  TASKS[group].forEach(t=>{
+    const card=document.createElement('div');
+    card.className='task-card'+(done.has(t.id)?' done':'');
+    card.dataset.id=t.id;
+    card.innerHTML=`<div class="check-btn"></div><div class="task-icon ${t.color}">${t.icon}</div><div class="task-body"><div class="task-name">${t.name}</div><div class="task-sub">${t.sub}</div></div>`;
+    card.addEventListener('click',()=>toggleTask(t.id,t.name));
     el.appendChild(card);
   });
 }
-
 function renderAll() {
-  renderGroup('pagi', 'group-pagi');
-  renderGroup('siang', 'group-siang');
-  renderGroup('malam', 'group-malam');
+  renderGroup('pagi','group-pagi');
+  renderGroup('siang','group-siang');
+  renderGroup('malam','group-malam');
   updateProgress();
 }
 
-// ── TOGGLE ──────────────────────────────────────────────
-function toggleTask(id, name) {
-  if (done.has(id)) {
-    done.delete(id);
-    showToast('↩️ ' + name);
-  } else {
-    done.add(id);
-    // Pengingat Gula & Junkfood setiap kelipatan 4 tugas
-    if(done.size % 4 === 0 && done.size !== 16) {
-        showToast('🧁 Ingat Dyy: Stop Gula & Junkfood!');
-    } else {
-        showToast('✅ ' + name);
-    }
+// ── TOGGLE TASK ──
+function toggleTask(id,name) {
+  if(done.has(id)){done.delete(id);playUndoSound();showToast('↩️ '+name);}
+  else{
+    done.add(id);playSound(currentSound);
+    if(done.size%4===0&&done.size!==TOTAL) showToast('🧁 Ingat Dyy: Stop Gula & Junkfood!');
+    else showToast('✅ '+name);
   }
-  document.querySelectorAll('.task-card').forEach(card => {
-    if (card.dataset.id === id) card.classList.toggle('done', done.has(id));
-  });
-  updateProgress();
-  saveState();
+  document.querySelectorAll('.task-card').forEach(c=>{if(c.dataset.id===id) c.classList.toggle('done',done.has(id));});
+  updateProgress(); saveState(); checkStreakOnComplete();
 }
 
-// ── PROGRESS ──────────────────────────────────────────────
-const TOTAL = 16;
+// ── PROGRESS ──
 function updateProgress() {
-  const n = done.size;
-  const pct = Math.round((n / TOTAL) * 100);
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-label').textContent = n + ' dari ' + TOTAL + ' selesai';
-  document.getElementById('prog-pct').textContent = pct + '%';
-
-  const idx = Math.min(Math.floor(n / (TOTAL / (MOTIVASI.length - 1))), MOTIVASI.length - 1);
-  document.getElementById('motivasi').textContent = MOTIVASI[idx];
-
-  const pg = TASKS.pagi.filter(t => done.has(t.id)).length;
-  const sg = TASKS.siang.filter(t => done.has(t.id)).length;
-  const mg = TASKS.malam.filter(t => done.has(t.id)).length;
-  document.getElementById('count-pagi').textContent = pg + '/' + TASKS.pagi.length;
-  document.getElementById('count-siang').textContent = sg + '/' + TASKS.siang.length;
-  document.getElementById('count-malam').textContent = mg + '/' + TASKS.malam.length;
-
-  document.getElementById('all-done').classList.toggle('show', n === TOTAL);
+  const n=done.size, pct=Math.round(n/TOTAL*100);
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('prog-label').textContent=n+' dari '+TOTAL+' selesai';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  const idx=Math.min(Math.floor(n/(TOTAL/(MOTIVASI.length-1))),MOTIVASI.length-1);
+  document.getElementById('motivasi').textContent=MOTIVASI[idx];
+  document.getElementById('count-pagi').textContent=TASKS.pagi.filter(t=>done.has(t.id)).length+'/'+TASKS.pagi.length;
+  document.getElementById('count-siang').textContent=TASKS.siang.filter(t=>done.has(t.id)).length+'/'+TASKS.siang.length;
+  document.getElementById('count-malam').textContent=TASKS.malam.filter(t=>done.has(t.id)).length+'/'+TASKS.malam.length;
+  document.getElementById('all-done').classList.toggle('show',n===TOTAL);
 }
 
-// ── DATE CHIP ──────────────────────────────────────────────
+// ── DATE ──
 function updateDate() {
-  const now = getWIBNow();
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
-  document.getElementById('date-chip').textContent =
-    days[now.getUTCDay()] + ', ' + now.getUTCDate() + ' ' + months[now.getUTCMonth()];
+  const now=getWIBNow();
+  const days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
+  document.getElementById('date-chip').textContent=days[now.getUTCDay()]+', '+now.getUTCDate()+' '+months[now.getUTCMonth()];
 }
 
-// ── COUNTDOWN TO MIDNIGHT WIB ──────────────────────────────────────────────
+// ── COUNTDOWN ──
 function updateCountdown() {
-  const wib = getWIBNow();
-  const h = wib.getUTCHours();
-  const m = wib.getUTCMinutes();
-  const s = wib.getUTCSeconds();
-  const totalSecsLeft = (24 * 3600) - (h * 3600 + m * 60 + s);
-  const hh = String(Math.floor(totalSecsLeft / 3600)).padStart(2,'0');
-  const mm = String(Math.floor((totalSecsLeft % 3600) / 60)).padStart(2,'0');
-  const ss = String(totalSecsLeft % 60).padStart(2,'0');
-  const txt = 'Reset dalam ' + hh + ':' + mm + ':' + ss;
-  document.getElementById('countdown-badge').textContent = hh + ':' + mm + ':' + ss;
-  document.getElementById('countdown-text').textContent = txt;
+  const wib=getWIBNow(), h=wib.getUTCHours(), m=wib.getUTCMinutes(), s=wib.getUTCSeconds();
+  const left=86400-(h*3600+m*60+s);
+  const hh=String(Math.floor(left/3600)).padStart(2,'0');
+  const mm=String(Math.floor(left%3600/60)).padStart(2,'0');
+  const ss=String(left%60).padStart(2,'0');
+  document.getElementById('countdown-badge').textContent=hh+':'+mm+':'+ss;
+  document.getElementById('countdown-text').textContent='Reset dalam '+hh+':'+mm+':'+ss;
 }
 
-// ── RESET ──────────────────────────────────────────────
+// ── RESET ──
 function resetAll() {
-  done.clear();
-  firedToday.clear();
-  saveState();
-  renderAll();
-  showToast('🔄 Progress direset!');
+  done.clear();firedToday.clear();waterCount=0;moodToday=null;
+  saveState();renderAll();renderWater();renderMood();showToast('🔄 Progress direset!');
 }
 
-let lastWIBDate = getWIBDate();
+let lastWIBDate=getWIBDate();
 function checkMidnightReset() {
-  const todayWIB = getWIBDate();
-  if (todayWIB !== lastWIBDate) {
-    lastWIBDate = todayWIB;
-    done.clear();
-    firedToday.clear();
-    saveState();
-    renderAll();
-    updateDate();
-    showToast('🌙 Hari baru! Progress direset otomatis');
+  const today=getWIBDate();
+  if(today!==lastWIBDate){
+    lastWIBDate=today;done.clear();firedToday.clear();waterCount=0;moodToday=null;
+    saveState();renderAll();renderWater();renderMood();updateDate();showToast('🌙 Hari baru! Progress direset otomatis');
   }
   updateCountdown();
 }
 
-// ── TOAST ──────────────────────────────────────────────
+// ── TOAST ──
 function showToast(msg) {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.textContent = msg;
-  container.appendChild(toast);
-  setTimeout(() => {
-    toast.classList.add('out');
-    setTimeout(() => toast.remove(), 280);
-  }, 2200);
+  const ct=document.getElementById('toast-container');
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  ct.appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),280);},2200);
 }
 
-// ── NOTIFICATION ──────────────────────────────────────────────
+// ── NOTIF ──
 function toggleNotif() {
-  if (!('Notification' in window)) {
-    showToast('⚠️ Browser ini tidak mendukung notifikasi');
-    return;
-  }
-  if (notifOn) {
-    notifOn = false;
-    if (tickInterval) { clearInterval(tickInterval); tickInterval = null; }
+  if(!('Notification'in window)){showToast('⚠️ Browser ini tidak mendukung notifikasi');return;}
+  if(notifOn){
+    notifOn=false;if(tickInterval){clearInterval(tickInterval);tickInterval=null;}
     document.getElementById('btn-notif').classList.remove('active');
-    document.getElementById('notif-icon').textContent = '🔔';
-    document.getElementById('notif-label').textContent = 'Aktifkan Notifikasi';
-    document.getElementById('notif-status').textContent = '';
-    try { localStorage.setItem(STORAGE_KEY_NOTIF, 'false'); } catch(e){}
-    showToast('🔕 Notifikasi dimatikan');
-    return;
+    document.getElementById('notif-icon').textContent='🔔';
+    document.getElementById('notif-label').textContent='Aktifkan Notifikasi';
+    document.getElementById('notif-status').textContent='';
+    try{localStorage.setItem(SK.NOTIF,'false');}catch(e){}
+    showToast('🔕 Notifikasi dimatikan');return;
   }
-  if (Notification.permission === 'granted') {
-    startNotif(false);
-  } else if (Notification.permission === 'denied') {
-    document.getElementById('notif-status').textContent = '⚠️ Izin notifikasi ditolak browser.';
-    showToast('⚠️ Izin notifikasi ditolak');
-  } else {
-    Notification.requestPermission().then(perm => {
-      if (perm === 'granted') {
-        startNotif(false);
-      } else {
-        document.getElementById('notif-status').textContent = '⚠️ Izin tidak diberikan.';
-        showToast('⚠️ Izin tidak diberikan');
-      }
-    });
-  }
+  if(Notification.permission==='granted'){startNotif(false);}
+  else if(Notification.permission==='denied'){document.getElementById('notif-status').textContent='⚠️ Izin ditolak browser.';showToast('⚠️ Izin notifikasi ditolak');}
+  else{Notification.requestPermission().then(p=>p==='granted'?startNotif(false):(document.getElementById('notif-status').textContent='⚠️ Izin tidak diberikan.',showToast('⚠️ Izin tidak diberikan')));}
 }
-
 function startNotif(silent) {
-  notifOn = true;
+  notifOn=true;
   document.getElementById('btn-notif').classList.add('active');
-  document.getElementById('notif-icon').textContent = '🔕';
-  document.getElementById('notif-label').textContent = 'Notifikasi Aktif';
-  document.getElementById('notif-status').textContent = '✅ Pengingat aktif untuk Dyy';
-  if (!silent) showToast('🔔 Notifikasi aktif!');
-  try { localStorage.setItem(STORAGE_KEY_NOTIF, 'true'); } catch(e){}
-
-  if (tickInterval) clearInterval(tickInterval);
-  tickInterval = setInterval(checkNotifSchedule, 30000);
+  document.getElementById('notif-icon').textContent='🔕';
+  document.getElementById('notif-label').textContent='Notifikasi Aktif';
+  document.getElementById('notif-status').textContent='✅ Pengingat aktif untuk Dyy';
+  if(!silent) showToast('🔔 Notifikasi aktif!');
+  try{localStorage.setItem(SK.NOTIF,'true');}catch(e){}
+  if(tickInterval) clearInterval(tickInterval);
+  tickInterval=setInterval(checkNotifSchedule,30000);
   checkNotifSchedule();
 }
-
 function checkNotifSchedule() {
-  if (!notifOn) return;
-  if (Notification.permission !== 'granted') return;
-
-  const wib = getWIBNow();
-  const h = wib.getUTCHours();
-  const m = wib.getUTCMinutes();
-  const todayKey = getWIBDate();
-
-  NOTIF_SCHEDULE.forEach(slot => {
-    const key = todayKey + '-' + slot.h + ':' + String(slot.m).padStart(2,'0');
-    if (firedToday.has(key)) return;
-    if (h === slot.h && m === slot.m) {
-      firedToday.add(key);
-      saveState();
-      try {
-        new Notification('Rutinku Harian 🌸', {
-          body: 'Dyy, ' + slot.msg,
-          icon: 'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',
-          tag: key,
-        });
-      } catch(e) {}
+  if(!notifOn||Notification.permission!=='granted') return;
+  const wib=getWIBNow(), h=wib.getUTCHours(), m=wib.getUTCMinutes(), key=getWIBDate();
+  NOTIF_SCHEDULE.forEach(slot=>{
+    const k=key+'-'+slot.h+':'+String(slot.m).padStart(2,'0');
+    if(firedToday.has(k)) return;
+    if(h===slot.h&&m===slot.m){
+      firedToday.add(k);saveState();
+      try{new Notification('Rutinku Harian 🌸',{body:'Dyy, '+slot.msg,icon:'https://em-content.zobj.net/source/apple/354/cherry-blossom_1f338.png',tag:k});}catch(e){}
     }
   });
 }
 
+// ── INIT ──
 setInterval(checkMidnightReset, 1000);
-
 loadState();
 updateDate();
+initSplash();
+initFlowers();
+renderSoundOptions();
 renderAll();
+renderWater();
+renderMood();
+updateStreakUI();
 updateCountdown();
 </script>
 </body>
